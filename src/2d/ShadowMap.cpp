@@ -449,7 +449,7 @@ void ShadowMap::CreateGraphicsPipeLine0()
 		std::copy_n((char*)errorBlob->GetBufferPointer(),
 			errorBlob->GetBufferSize(),
 			errstr.begin());
-		errstr += "\n";
+		errstr += "\n"; 
 		// エラー内容を出力ウィンドウに表示
 		OutputDebugStringA(errstr.c_str());
 		exit(1);
