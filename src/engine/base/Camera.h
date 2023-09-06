@@ -68,6 +68,8 @@ private:
 	//プレイヤー
 	//ターゲットまでの距離
 	float playerTargetDistance = 20.0f;
+	//プレイヤーを見下ろす角度
+	float playerRotTargerRot = PI * 12 / 40;
 	//加算用
 	float playerChangeRot = (float)PI;
 	float playerChangeRot2 = 0.5f;
