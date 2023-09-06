@@ -51,11 +51,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	FbxModel::SetDevice(dxCommon_->GetDevice());
 	//モデル名を指定してファイル読み込み
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("plane"));
-	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("Tree"));
-	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("Tree1"));
-	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("Tree2"));
-	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("Tree3"));
-	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("Cube"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("player"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("enemy"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
