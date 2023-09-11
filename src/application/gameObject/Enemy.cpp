@@ -33,7 +33,7 @@ void Enemy::UpdateObject()
 	object->SetRotation(rotation);
 	object->SetScale(scale);
 
-	object->Update();
+	/*object->Update();*/
 }
 
 void Enemy::UpdateSprite()
@@ -65,8 +65,8 @@ void Enemy::Move()
 	////ジャンプ更新
 	//UpdateJump();
 
-	////重力更新
-	//UpdateGravity();
+	//重力更新
+	/*UpdateGravity();*/
 
 	//position.x -= input->PushKey(DIK_A) * speed;
 	//position.x += input->PushKey(DIK_D) * speed;
@@ -97,9 +97,10 @@ void Enemy::UpdateGravity()
 	fallVelocity.y = -(GAcceleration * fallTimer);
 
 	//座標に落下ベクトルを加算
-	position.x += fallVelocity.x;
-	position.y += fallVelocity.y;
-	position.z += fallVelocity.z;
+	position = position + fallVelocity;
+
+	//座標に落下ベクトルを加算
+	/*position = position + fallVelocity;*/
 }
 
 void Enemy::UpdateJump()
@@ -143,7 +144,4 @@ void Enemy::HitPlane()
 
 	//めり込まなくなるまで加算
 	position.y += 0.1f;
-
-	//オブジェクト更新
-	UpdateObject();
 }

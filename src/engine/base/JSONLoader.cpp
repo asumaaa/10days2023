@@ -67,7 +67,11 @@ void JSONLoader::LoadFile(const std::string fileName)
 			objectData1.position.y = (float)transform["translation"][2];
 			objectData1.position.z = (float)transform["translation"][1];
 			// ‰ñ“]Šp
-			if (object["file_name"].get<std::string>() != "plane")
+			if (object["file_name"].get<std::string>() != "stage1" && object["file_name"].get<std::string>() != "stage2" &&
+				object["file_name"].get<std::string>() != "stage3" && object["file_name"].get<std::string>() != "stage4" &&
+				object["file_name"].get<std::string>() != "stage5" && object["file_name"].get<std::string>() != "stage6" && 
+				object["file_name"].get<std::string>() != "stage7" && object["file_name"].get<std::string>() != "stage8" && 
+				object["file_name"].get<std::string>() != "stage9")
 			{
 				objectData1.rotation.x = (float)transform["rotation"][0] - 90;
 				objectData1.rotation.y = (float)transform["rotation"][2] - 180;

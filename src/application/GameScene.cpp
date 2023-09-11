@@ -230,7 +230,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 
 	//レベルエディタ
 	JSONLoader* newJsonLoader = new JSONLoader();
-	newJsonLoader->LoadFile("Resources/json/demo1.json");
+	newJsonLoader->LoadFile("Resources/json/10days.json");
 	jsonLoader.reset(newJsonLoader);
 
 	for (int i = 0; i < jsonLoader->GetObjectNum(); i++)
@@ -245,6 +245,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			if (jsonLoader->GetFileName(i) == model->GetFileName())
 			{
 				newObject->SetModel(model.get());
+			}
+			//ステージの場合
+			if (model->GetFileName() == "plane")
+			{
+				if (jsonLoader->GetFileName(i) == "stage1" || jsonLoader->GetFileName(i) == "stage2" ||
+					jsonLoader->GetFileName(i) == "stage3" || jsonLoader->GetFileName(i) == "stage4" ||
+					jsonLoader->GetFileName(i) == "stage5" || jsonLoader->GetFileName(i) == "stage6" ||
+					jsonLoader->GetFileName(i) == "stage7" || jsonLoader->GetFileName(i) == "stage8" ||
+					jsonLoader->GetFileName(i) == "stage9")
+				{
+					newObject->SetModel(model.get());
+				}
 			}
 		}
 
@@ -345,22 +357,22 @@ void GameScene::Update()
 	/*plane->Update();*/
 
 	//スペースキーでファイル読み込み更新
-	if(input_->TriggerKey(DIK_SPACE))
-	{
-		jsonLoader->LoadFile("Resources/json/demo1.json"); 
-		int i = 0;
-		for (std::unique_ptr<FbxObject3D>& object0 : object)
-		{
-			//プレイヤー以外のオブジェクト更新
-			if (object0->GetFileName() != "player")
-			{
-				object0->SetPosition(jsonLoader->GetPosition(i));
-				object0->SetScale(jsonLoader->GetScale(i));
-				object0->SetRotation(jsonLoader->GetRotation(i));
-			}
-			i++;
-		}
-	}
+	//if(input_->TriggerKey(DIK_SPACE))
+	//{
+	//	jsonLoader->LoadFile("Resources/json/demo1.json"); 
+	//	int i = 0;
+	//	for (std::unique_ptr<FbxObject3D>& object0 : object)
+	//	{
+	//		//プレイヤー以外のオブジェクト更新
+	//		if (object0->GetFileName() != "player")
+	//		{
+	//			object0->SetPosition(jsonLoader->GetPosition(i));
+	//			object0->SetScale(jsonLoader->GetScale(i));
+	//			object0->SetRotation(jsonLoader->GetRotation(i));
+	//		}
+	//		i++;
+	//	}
+	//}
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		object0->Update();
@@ -382,7 +394,7 @@ void GameScene::UpdateCollider()
 		{
 			for (std::unique_ptr<FbxObject3D>& object1 : object)
 			{
-				if (object1->GetFileName() == "plane")
+				if (object1->GetColliderType() == "Plane")
 				{
 					//当たっていたら
 					while (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
@@ -395,19 +407,19 @@ void GameScene::UpdateCollider()
 	}
 
 	//プレイヤーと平面との判定
-	for (std::unique_ptr<FbxObject3D>& object0 : object)
+	/*for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		if (object0->GetFileName() == "player")
 		{
 			for (std::unique_ptr<FbxObject3D>& object1 : object)
 			{
-				if (object1->GetFileName() == "enemy")
+				if (object1->GetColliderType() == "Plane")
 				{
 					ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData());
 				}
 			}
 		}
-	}
+	}*/
 
 	//弾と敵との判定
 	for (std::unique_ptr<FbxObject3D>& object0 : object)

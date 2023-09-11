@@ -70,12 +70,12 @@ public:
 	std::unique_ptr<Sprite>spriteHpBar;
 
 	//変形行列
-	//平行移動
-	XMFLOAT3 position = {0.0f,0.0f,0.0f};
+	//座標
+	XMFLOAT3 position;
 	//回転
-	XMFLOAT3 rotation = {0.0f,0.0f,0.0f};
+	XMFLOAT3 rotation;
 	//サイズ
-	XMFLOAT3 scale = {1.0f,1.0f,1.0f};
+	XMFLOAT3 scale;
 
 
 	//当たり判定関連

@@ -98,6 +98,7 @@ public://メンバ関数
 	std::string GetFileName() { return fileName; }
 	std::string GetObjectName() { return objectName; }
 	JSONLoader::ColliderData GetColliderData() { return colliderData; }
+	std::string GetColliderType() { return colliderData.type; }
 
 private://メンバ変数
 	//定数バッファ
