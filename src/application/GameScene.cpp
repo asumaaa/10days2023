@@ -480,9 +480,6 @@ void GameScene::DrawFBXLightView()
 	{
 		object0->DrawLightView(dxCommon_->GetCommandList());
 	}
-
-	//プレイヤー
-	player->DrawLightView(dxCommon_->GetCommandList());
 }
 
 void GameScene::DrawFBX()
@@ -491,8 +488,6 @@ void GameScene::DrawFBX()
 	{
 		object0->Draw(dxCommon_->GetCommandList());
 	}
-	//プレイヤー
-	player->Draw(dxCommon_->GetCommandList());
 }
 
 void GameScene::DrawCollider()
@@ -519,8 +514,6 @@ void GameScene::SetSRV(ID3D12DescriptorHeap* SRV)
 	{
 		object0->SetSRV(SRV);
 	}
-	//プレイヤー
-	player->SetSRV(SRV);
 }
 
 DirectX::XMMATRIX GameScene::GetLightViewProjection()

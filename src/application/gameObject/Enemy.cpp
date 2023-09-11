@@ -29,9 +29,16 @@ void Enemy::Update()
 
 void Enemy::UpdateObject()
 {
-	object->SetPosition(position);
-	object->SetRotation(rotation);
-	object->SetScale(scale);
+	//更新
+	int i = 0;
+	for (std::unique_ptr<FbxObject3D>& objects : object)
+	{
+		objects->SetPosition(position[i]);
+		objects->SetRotation(rotation[i]);
+		objects->SetScale(scale[i]);
+		objects->Update();
+		i++;
+	}
 
 	/*object->Update();*/
 }
@@ -43,16 +50,6 @@ void Enemy::UpdateSprite()
 	spriteHpBar->SetScale({ 100.0f, 100.0 });
 	spriteHpBar->SetPosition({ 0.0f, 0.0 });
 	spriteHpBar->Update();
-}
-
-void Enemy::Draw(ID3D12GraphicsCommandList* cmdList)
-{
-	object->Draw(cmdList);
-}
-
-void Enemy::DrawLightView(ID3D12GraphicsCommandList* cmdList)
-{
-	object->DrawLightView(cmdList);
 }
 
 void Enemy::DrawSprite(ID3D12GraphicsCommandList* cmdList)
@@ -76,28 +73,28 @@ void Enemy::Move()
 
 void Enemy::UpdateGravity()
 {
-	//接地していたらタイマーとベクトルリセット
-	if (groundFlag == true)
-	{
-		fallTimer = 0.0f;
-		fallVelocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	}
+	////接地していたらタイマーとベクトルリセット
+	//if (groundFlag == true)
+	//{
+	//	fallTimer = 0.0f;
+	//	fallVelocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	//}
 
-	//接地していなければ
-	if (groundFlag == false)
-	{
-		//落下タイマーが最大値より小さければ
-		if (fallTimer < fallTime)
-		{
-			fallTimer += fallFrame;
-		}
-	}
+	////接地していなければ
+	//if (groundFlag == false)
+	//{
+	//	//落下タイマーが最大値より小さければ
+	//	if (fallTimer < fallTime)
+	//	{
+	//		fallTimer += fallFrame;
+	//	}
+	//}
 
-	//落下ベクトル計算
-	fallVelocity.y = -(GAcceleration * fallTimer);
+	////落下ベクトル計算
+	//fallVelocity.y = -(GAcceleration * fallTimer);
 
-	//座標に落下ベクトルを加算
-	position = position + fallVelocity;
+	////座標に落下ベクトルを加算
+	//position = position + fallVelocity;
 
 	//座標に落下ベクトルを加算
 	/*position = position + fallVelocity;*/
@@ -125,23 +122,18 @@ void Enemy::UpdateAttack()
 void Enemy::SetObject(FbxObject3D* object)
 {
 	//引数のオブジェクトをセット
-	Enemy::object.reset(object);
+	Enemy::object.emplace_back(object);
 
-	position = object->GetPosition();
-	rotation = object->GetRotation();
-	scale = object->GetScale();
-}
-
-void Enemy::SetSRV(ID3D12DescriptorHeap* SRV)
-{
-	object->SetSRV(SRV);
+	position.emplace_back(object->GetPosition());
+	rotation.emplace_back(object->GetRotation());
+	scale.emplace_back(object->GetScale());
 }
 
 void Enemy::HitPlane()
 {
-	//接地フラグを立てる
-	groundFlag = true;
+	////接地フラグを立てる
+	//groundFlag = true;
 
-	//めり込まなくなるまで加算
-	position.y += 0.1f;
+	////めり込まなくなるまで加算
+	//position.y += 0.1f;
 }

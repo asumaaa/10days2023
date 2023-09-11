@@ -27,8 +27,6 @@ public:
 	void UpdateObject();
 	void UpdateSprite();
 	//描画
-	void Draw(ID3D12GraphicsCommandList* cmdList);
-	void DrawLightView(ID3D12GraphicsCommandList* cmdList);
 	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
 
 	//挙動関連
@@ -44,13 +42,12 @@ public:
 
 	//セッター
 	void SetObject(FbxObject3D* object);
-	void SetSRV(ID3D12DescriptorHeap* SRV);
 	void HitPlane();
 
 	//ゲッター
-	XMFLOAT3 GetPosition() { return position; }
-	XMFLOAT3 GetRotation() { return rotation; }
-	XMFLOAT3 GetScale() { return scale; }
+	XMFLOAT3 GetPosition(int num) { return position[num]; }
+	XMFLOAT3 GetRotation(int num) { return rotation[num]; }
+	XMFLOAT3 GetScale(int num) { return scale[num]; }
 
 	//静的メンバ変数
 private:
@@ -65,17 +62,17 @@ private:
 public:
 
 	//オブジェクト
-	std::unique_ptr<FbxObject3D>object;
+	std::list<std::unique_ptr<FbxObject3D>>object;
 	//スプライト
 	std::unique_ptr<Sprite>spriteHpBar;
 
 	//変形行列
 	//座標
-	XMFLOAT3 position;
+	std::vector<XMFLOAT3> position;
 	//回転
-	XMFLOAT3 rotation;
+	std::vector<XMFLOAT3> rotation;
 	//サイズ
-	XMFLOAT3 scale;
+	std::vector<XMFLOAT3> scale;
 
 
 	//当たり判定関連
