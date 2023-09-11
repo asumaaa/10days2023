@@ -3,6 +3,15 @@
 #include "FbxObject3D.h"
 #include "Sprite.h"
 
+enum EnemyType {
+	HomingMoveShotEnemy,
+	HomingMoveEnemy,
+	NormalShotEnemy,
+	HomingShotEnemy,
+	MoveXEnemy,
+	MoveZEnemy
+};
+
 class Enemy
 {
 private:	//エイリアス
@@ -23,7 +32,7 @@ public:
 	//初期化
 	void Initialize();
 	//更新
-	void Update();
+	void Update(XMFLOAT3 playerPos);
 	void UpdateObject();
 	void UpdateSprite();
 	//描画
@@ -32,6 +41,14 @@ public:
 	//挙動関連
 	//挙動全般
 	void Move();
+
+	//移動種類
+	void MoveHoming(int i);
+	void MoveX(int i);
+	void MoveZ(int i);
+
+	//射撃
+	void Shot();
 	//落下
 	void UpdateGravity();
 	//ジャンプ
@@ -43,6 +60,9 @@ public:
 	//セッター
 	void SetObject(FbxObject3D* object);
 	void HitPlane();
+
+	//void SetType(int num,int type) { this->type[num] = type; }
+	void SetStageMid(XMFLOAT3 stageMid) { this->stageMid = stageMid; }
 
 	//ゲッター
 	XMFLOAT3 GetPosition(int num) { return position[num]; }
@@ -73,6 +93,22 @@ public:
 	std::vector<XMFLOAT3> rotation;
 	//サイズ
 	std::vector<XMFLOAT3> scale;
+
+	//敵の種類
+	std::vector<int> type;
+
+	//敵の動き 0 = 左,下 1 = 右,上 
+	std::vector<bool> moveX;
+	std::vector<bool> moveZ;
+
+	//プレイヤーの位置
+	XMFLOAT3 playerPosition = {};
+	//ステージの中心座標
+	XMFLOAT3 stageMid = {};
+	//ステージのサイズ
+	XMFLOAT3 stageSize = {40,1,40};
+	//移動スピード
+	float enemySpeed = 0.1;
 
 
 	//当たり判定関連

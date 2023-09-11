@@ -209,6 +209,7 @@
     <ClCompile Include="engine\main.cpp" />
     <ClCompile Include="engine\math\mathOriginal.cpp" />
     <ClCompile Include="engine\math\Matrix4.cpp" />
+    <ClCompile Include="engine\math\Vector3.cpp" />
     <ClCompile Include="engine\particle\ExplosionParticle1.cpp" />
     <ClCompile Include="engine\particle\ExplosionParticle2.cpp" />
     <ClCompile Include="engine\particle\FireParticle.cpp" />
@@ -266,6 +267,7 @@
     <ClInclude Include="engine\light\SpotLight.h" />
     <ClInclude Include="engine\math\mathOriginal.h" />
     <ClInclude Include="engine\math\Matrix4.h" />
+    <ClInclude Include="engine\math\Vector3.h" />
     <ClInclude Include="engine\particle\ExplosionParticle1.h" />
     <ClInclude Include="engine\particle\ExplosionParticle2.h" />
     <ClInclude Include="engine\particle\FireParticle.h" />

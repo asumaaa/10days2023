@@ -346,7 +346,7 @@ void GameScene::Update()
 	player->Update();
 
 	//“G
-	enemy->Update();
+	enemy->Update(player->GetPosition());
 
 	//•½–Ê
 	/*plane->Update();*/

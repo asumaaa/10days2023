@@ -1,5 +1,7 @@
 #include "Player.h"
 #include "mathOriginal.h"
+#include "ImGui.h"
+
 #define G 6.674	//万有引力定数
 #define GAcceleration 9.80665 * 1/10	//重力加速度
 
@@ -21,6 +23,11 @@ void Player::Update()
 
 	//オブジェクト更新
 	UpdateObject();
+
+	ImGui::Begin("PlayerPos");
+	ImGui::Text("%f,%f,%f",position.x,position.y,position.z);
+	ImGui::End();
+
 }
 
 void Player::UpdateObject()
@@ -61,7 +68,7 @@ void Player::DrawLightView(ID3D12GraphicsCommandList* cmdList)
 void Player::Move()
 {
 	//ジャンプ更新
-	UpdateJump();
+	//UpdateJump();
 
 	//重力更新
 	UpdateGravity();

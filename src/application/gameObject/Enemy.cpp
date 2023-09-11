@@ -1,5 +1,7 @@
 #include "Enemy.h"
 #include "mathOriginal.h"
+#include "Vector3.h"
+
 #define G 6.674	//万有引力定数
 #define GAcceleration 9.80665 * 1/10	//重力加速度
 
@@ -15,8 +17,11 @@ void Enemy::Initialize()
 	spriteHpBar.reset(newSprite);
 }
 
-void Enemy::Update()
+void Enemy::Update(XMFLOAT3 playerPos)
 {
+	//プレイヤー座標取得
+	this->playerPosition = playerPos;
+
 	//動く
 	Move();
 
@@ -59,16 +64,117 @@ void Enemy::DrawSprite(ID3D12GraphicsCommandList* cmdList)
 
 void Enemy::Move()
 {
-	////ジャンプ更新
-	//UpdateJump();
+	int i = 0;
+	for (std::unique_ptr<FbxObject3D>& objects : object) {
 
-	//重力更新
-	/*UpdateGravity();*/
+		switch (type[i]) {
 
-	//position.x -= input->PushKey(DIK_A) * speed;
-	//position.x += input->PushKey(DIK_D) * speed;
-	//position.z -= input->PushKey(DIK_S) * speed;
-	//position.z += input->PushKey(DIK_W) * speed;
+		case HomingMoveShotEnemy:
+			break;
+
+		case HomingMoveEnemy:
+			MoveHoming(i);
+			break;
+
+		case NormalShotEnemy:
+			break;
+
+		case HomingShotEnemy:
+			break;
+
+		case MoveXEnemy:
+			MoveX(i);
+			break;
+
+		case MoveZEnemy:
+			MoveZ(i);
+			break;
+		}
+
+		i++;
+	}
+
+}
+
+void Enemy::MoveHoming(int i)
+{
+	//自機と敵のベクトルを用意
+	Vector3 playerVec = { playerPosition.x,playerPosition.y,playerPosition.z };
+	Vector3 enemyVec = { position[i].x,position[i].y,position[i].z };
+
+	//自機とのベクトルを取る
+	Vector3 velocity = playerVec - enemyVec;
+
+	//正規化をして速度をかける
+	velocity.normalize();
+	velocity *= enemySpeed;
+
+	//移動ベクトルを加算
+	position[i].x += velocity.x;
+	position[i].z += velocity.z;
+
+}
+
+void Enemy::MoveX(int i)
+{
+	//ステージの端を計算
+	float stageRight = stageMid.x + (stageSize.x);
+	float stageLeft = stageMid.x - (stageSize.x);
+
+	//ステージ端に来たら反射させる
+	if (moveX[i]) {
+		if (position[i].x > stageRight) {
+			moveX[i] = false;
+		}
+	}
+	else {
+		if (position[i].x < stageLeft) {
+			moveX[i] = true;
+		}
+	}
+
+	//移動
+	if (moveX[i]) {
+		//右に移動
+		position[i].x += enemySpeed;
+	}
+	else {
+		//左に移動
+		position[i].x -= enemySpeed;
+	}
+}
+
+void Enemy::MoveZ(int i)
+{
+	//ステージの端を計算
+	float stageUp = stageMid.z + (stageSize.z);
+	float stageDown = stageMid.z - (stageSize.z);
+
+	//ステージ端に来たら反射させる
+	if (moveZ[i]) {
+		if (position[i].z > stageUp) {
+			moveZ[i] = false;
+		}
+	}
+	else {
+		if (position[i].z < stageDown) {
+			moveZ[i] = true;
+		}
+	}
+
+	//移動
+	if (moveZ[i]) {
+		//右に移動
+		position[i].z += enemySpeed;
+	}
+	else {
+		//左に移動
+		position[i].z -= enemySpeed;
+	}
+}
+
+void Enemy::Shot()
+{
 }
 
 void Enemy::UpdateGravity()
@@ -127,6 +233,10 @@ void Enemy::SetObject(FbxObject3D* object)
 	position.emplace_back(object->GetPosition());
 	rotation.emplace_back(object->GetRotation());
 	scale.emplace_back(object->GetScale());
+
+	type.push_back(HomingMoveEnemy);
+	moveX.push_back(true);
+	moveZ.push_back(true);
 }
 
 void Enemy::HitPlane()

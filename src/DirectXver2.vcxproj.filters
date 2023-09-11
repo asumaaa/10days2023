@@ -291,6 +291,9 @@
     <ClCompile Include="engine\base\SoundManager.cpp">
       <Filter>ソース ファイル\base</Filter>
     </ClCompile>
+    <ClCompile Include="engine\math\Vector3.cpp">
+      <Filter>ソース ファイル\math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="2d\MonochromeEffect.h">
@@ -457,6 +460,9 @@
     </ClInclude>
     <ClInclude Include="engine\base\SoundManager.h">
       <Filter>ヘッダー ファイル\base</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\math\Vector3.h">
+      <Filter>ヘッダー ファイル\math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
