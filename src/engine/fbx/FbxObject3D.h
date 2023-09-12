@@ -100,6 +100,10 @@ public://メンバ関数
 	JSONLoader::ColliderData GetColliderData() { return colliderData; }
 	std::string GetColliderType() { return colliderData.type; }
 
+	//敵の番号
+	void SetEnemyNum(int num) { this->enemyNum = num; }
+	int GetEnemyNum() { return enemyNum; }
+
 private://メンバ変数
 	//定数バッファ
 	ComPtr<ID3D12Resource>constBuffTransform;
@@ -173,4 +177,7 @@ private:
 	//使用するシェーダの名前
 	std::string shaderName;
 	bool shaderFlag = false;
+
+	//敵の番号
+	int enemyNum;
 };
