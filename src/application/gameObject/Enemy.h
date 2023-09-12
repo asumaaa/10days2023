@@ -2,14 +2,18 @@
 #include "DirectXMath.h"
 #include "FbxObject3D.h"
 #include "Sprite.h"
+#include "EnemyBullet.h"
 
 enum EnemyType {
-	HomingMoveShotEnemy,
-	HomingMoveEnemy,
-	NormalShotEnemy,
-	HomingShotEnemy,
 	MoveXEnemy,
-	MoveZEnemy
+	MoveZEnemy,
+	MoveXZEnemy,
+	HomingMoveEnemy,
+	NormalShotXEnemy,
+	NormalShotZEnemy,
+	NormalShotXZEnemy,
+	HomingShotEnemy,
+	HomingMoveShotEnemy,
 };
 
 class Enemy
@@ -37,10 +41,14 @@ public:
 	void UpdateSprite();
 	//描画
 	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
+	//描画
+	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void DrawLightView(ID3D12GraphicsCommandList* cmdList);
+	void SetSRV(ID3D12DescriptorHeap* SRV);
 
 	//挙動関連
 	//挙動全般
-	void Move();
+	void TypeUpdate();
 
 	//移動種類
 	void MoveHoming(int i);
@@ -48,7 +56,11 @@ public:
 	void MoveZ(int i);
 
 	//射撃
-	void Shot();
+	void Shot(int i,XMFLOAT3 velosity);
+	void ShotX(int i);
+	void ShotZ(int i);
+	void ShotHoming(int i);
+
 	//落下
 	void UpdateGravity();
 	//ジャンプ
@@ -63,6 +75,7 @@ public:
 
 	//void SetType(int num,int type) { this->type[num] = type; }
 	void SetStageMid(XMFLOAT3 stageMid) { this->stageMid = stageMid; }
+	void SetBullet(EnemyBullet* enemyBullet) { Enemy::bullet = enemyBullet; }
 
 	//ゲッター
 	XMFLOAT3 GetPosition(int num) { return position[num]; }
@@ -93,13 +106,8 @@ public:
 	std::vector<XMFLOAT3> rotation;
 	//サイズ
 	std::vector<XMFLOAT3> scale;
-
-	//敵の種類
+	//種類
 	std::vector<int> type;
-
-	//敵の動き 0 = 左,下 1 = 右,上 
-	std::vector<bool> moveX;
-	std::vector<bool> moveZ;
 
 	//プレイヤーの位置
 	XMFLOAT3 playerPosition = {};
@@ -107,9 +115,21 @@ public:
 	XMFLOAT3 stageMid = {};
 	//ステージのサイズ
 	XMFLOAT3 stageSize = {40,1,40};
+
+	//動き 0 = 左,下 1 = 右,上 
+	std::vector<bool> moveX;
+	std::vector<bool> moveZ;
 	//移動スピード
 	float enemySpeed = 0.1;
 
+	//弾
+	EnemyBullet* bullet;
+	float bulletSpeed = 0.2;
+	//射撃
+	const int ShotCoolTime = 100;
+	int shotCoolTimer = 0;
+	//射撃フラグ
+	bool isShot = false;
 
 	//当たり判定関連
 	//接地フラグ

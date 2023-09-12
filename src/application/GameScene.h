@@ -17,6 +17,7 @@
 #include "Player.h"
 #include "PlayerBullet.h"
 #include "Enemy.h"
+#include "EnemyBullet.h"
 #include "ColliderCubeObject.h"
 #include "ColliderSphereObject.h"
 #include "ColliderPlaneObject.h"
@@ -48,7 +49,7 @@ public:
 	void DrawCollider();
 	void DrawSprite();
 	void DrawParticle();
-	
+
 	//セッター
 	void SetSRV(ID3D12DescriptorHeap* SRV);
 	//ゲッター
@@ -74,11 +75,11 @@ private:
 
 	//ライト 影用
 	std::unique_ptr<Light> light;
-	float lightDir[3] = {0.0f,-1.0f , -1.0f};
-	float lightPos[3] = {0.0f,25.0f,25.0f};
+	float lightDir[3] = { 0.0f,-1.0f , -1.0f };
+	float lightPos[3] = { 0.0f,25.0f,25.0f };
 	float lightTarget[3] = { 0.0f,0.0f,0.0f };
 	float lightFactorAngle[2] = { 20.0f,30.0f, };
-	float lightAtten[3] = {0.0f,0.0f,0.0f};
+	float lightAtten[3] = { 0.0f,0.0f,0.0f };
 
 	//ライト
 	std::unique_ptr<LightGroup> lightGroup;
@@ -100,7 +101,9 @@ private:
 
 	//敵
 	std::unique_ptr<Enemy>enemy;
-	
+	//敵の弾
+	std::unique_ptr<EnemyBullet>enemyBullet;
+
 	//平面
 	/*std::unique_ptr<Plane> plane;*/
 

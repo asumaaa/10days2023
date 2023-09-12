@@ -201,11 +201,27 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newPlayer->SetBullet(playerBullet.get());
 	player.reset(newPlayer);
 
+	//“G’e
+	EnemyBullet::SetCamera(camera_.get());
+	EnemyBullet::SetInput(input);
+	EnemyBullet* newEnemyBullet = new EnemyBullet();
+	//ƒ‚ƒfƒ‹ƒZƒbƒg
+	for (std::unique_ptr<FbxModel>& model : models)
+	{
+		if (model->GetFileName() == "playerBullet")
+		{
+			newEnemyBullet->SetModel(model.get());
+		}
+	}
+	newEnemyBullet->Initialize();
+	enemyBullet.reset(newEnemyBullet);
+
 	//“G
 	Enemy::SetCamera(camera_.get());
 	Enemy::SetInput(input);
 	Enemy* newEnemy = new Enemy();
 	newEnemy->Initialize();
+	newEnemy->SetBullet(enemyBullet.get());
 	enemy.reset(newEnemy);
 
 	//•½–Ê
@@ -416,6 +432,32 @@ void GameScene::UpdateCollider()
 		}
 	}*/
 
+	//ƒvƒŒƒCƒ„[‚Æ“G’e‚Æ‚Ì”»’è
+	for (std::unique_ptr<FbxObject3D>& object0 : object)
+	{
+		if (object0->GetFileName() == "player")
+		{
+			//’e‚ªˆê‚ÂˆÈã‚ ‚ê‚Î
+			if (enemyBullet->GetBulletNum() >= 1)
+			{
+				for (int i = 0; i < enemyBullet->GetBulletNum(); i++)
+				{
+					if (ColliderManager::CheckCollider(enemyBullet->GetColliderData(i),
+						object0->GetColliderData()))
+					{
+						//ƒp[ƒeƒBƒNƒ‹
+						sparkParticle2->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
+						explosionParticle1->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
+						explosionParticle2->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
+						//’e
+						enemyBullet->SetHitFlag(true, i);
+					}
+				}
+			}
+		}
+	}
+
+
 	//’e‚Æ“G‚Æ‚Ì”»’è
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
@@ -440,7 +482,6 @@ void GameScene::UpdateCollider()
 			}
 		}
 	}
-
 	//Œãˆ—
 	ColliderManager::PostUpdate();
 }
