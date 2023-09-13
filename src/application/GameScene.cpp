@@ -43,6 +43,20 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newTextureManager->LoadFile(15, L"Resources/pictures/blackParticle.png");
 	newTextureManager->LoadFile(16, L"Resources/pictures/effect4.png");
 
+	newTextureManager->LoadFile(17, L"Resources/pictures/title.png");
+	newTextureManager->LoadFile(18, L"Resources/pictures/gameover.png");
+	newTextureManager->LoadFile(19, L"Resources/pictures/clear.png");
+	newTextureManager->LoadFile(20, L"Resources/pictures/titleSerectButton.png");
+	newTextureManager->LoadFile(21, L"Resources/pictures/stageSelectButton.png");
+	newTextureManager->LoadFile(22, L"Resources/pictures/menu.png");
+
+	newTextureManager->LoadFile(23, L"Resources/pictures/stageSelect.png");
+	newTextureManager->LoadFile(24, L"Resources/pictures/menuButton.png");
+	newTextureManager->LoadFile(25, L"Resources/pictures/menuClose.png");
+	newTextureManager->LoadFile(26, L"Resources/pictures/stage1.png");
+	newTextureManager->LoadFile(27, L"Resources/pictures/stage2.png");
+	newTextureManager->LoadFile(28, L"Resources/pictures/stage3.png");
+
 	textureManager.reset(newTextureManager);
 
 	//FBXローダー初期化
@@ -61,6 +75,115 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	Sprite::SetDevice(dxCommon->GetDevice());
 	Sprite::SetSpriteManager(textureManager.get());
 	Sprite::CreateGraphicsPipeLine();
+
+	//----------画像----------
+	//タイトル
+	Sprite* newTitleSprite = new Sprite();
+	newTitleSprite->SetTextureNum(17);
+	newTitleSprite->Initialize();
+	titleSprite.reset(newTitleSprite);
+	titleSprite->SetAlpha(1.0f);
+	titleSprite->SetScale({ 1280.0f, 720.0f });
+	titleSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ゲームオーバー
+	Sprite* newGameoverSprite = new Sprite();
+	newGameoverSprite->SetTextureNum(18);
+	newGameoverSprite->Initialize();
+	gameoverSprite.reset(newGameoverSprite);
+	gameoverSprite->SetAlpha(1.0f);
+	gameoverSprite->SetScale({ 1280.0f, 720.0f });
+	gameoverSprite->SetPosition({ 0.0f, 0.0 });
+
+	//クリア
+	Sprite* newClearSprite = new Sprite();
+	newClearSprite->SetTextureNum(19);
+	newClearSprite->Initialize();
+	clearSprite.reset(newClearSprite);
+	clearSprite->SetAlpha(1.0f);
+	clearSprite->SetScale({ 1280.0f, 720.0f });
+	clearSprite->SetPosition({ 0.0f, 0.0 });
+
+	//タイトル選択
+	Sprite* newTitleSerectButtonSprite = new Sprite();
+	newTitleSerectButtonSprite->SetTextureNum(20);
+	newTitleSerectButtonSprite->Initialize();
+	titleSerectButtonSprite.reset(newTitleSerectButtonSprite);
+	titleSerectButtonSprite->SetAlpha(1.0f);
+	titleSerectButtonSprite->SetScale({ 1280.0f, 720.0f });
+	titleSerectButtonSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ステージ選択
+	Sprite* newStageSerectButtonSprite = new Sprite();
+	newStageSerectButtonSprite->SetTextureNum(21);
+	newStageSerectButtonSprite->Initialize();
+	stageSerectButtonSprite.reset(newStageSerectButtonSprite);
+	stageSerectButtonSprite->SetAlpha(1.0f);
+	stageSerectButtonSprite->SetScale({ 1280.0f, 720.0f });
+	stageSerectButtonSprite->SetPosition({ 0.0f, 0.0 });
+
+	//メニュー
+	Sprite* newMenuSprite = new Sprite();
+	newMenuSprite->SetTextureNum(22);
+	newMenuSprite->Initialize();
+	menuSprite.reset(newMenuSprite);
+	menuSprite->SetAlpha(1.0f);
+	menuSprite->SetScale({ 1280.0f, 720.0f });
+	menuSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ステージセレクト
+	Sprite* newStageSelectSprite = new Sprite();
+	newStageSelectSprite->SetTextureNum(23);
+	newStageSelectSprite->Initialize();
+	stageSelectSprite.reset(newStageSelectSprite);
+	stageSelectSprite->SetAlpha(1.0f);
+	stageSelectSprite->SetScale({ 1280.0f, 720.0f });
+	stageSelectSprite->SetPosition({ 0.0f, 0.0 });
+
+	//メニュー開く
+	Sprite* newMenuButtonSprite = new Sprite();
+	newMenuButtonSprite->SetTextureNum(24);
+	newMenuButtonSprite->Initialize();
+	menuButtonSprite.reset(newMenuButtonSprite);
+	menuButtonSprite->SetAlpha(1.0f);
+	menuButtonSprite->SetScale({ 1280.0f, 720.0f });
+	menuButtonSprite->SetPosition({ 0.0f, 0.0 });
+
+	//メニュー閉じる
+	Sprite* newMenuCloseSprite = new Sprite();
+	newMenuCloseSprite->SetTextureNum(25);
+	newMenuCloseSprite->Initialize();
+	menuCloseSprite.reset(newMenuCloseSprite);
+	menuCloseSprite->SetAlpha(1.0f);
+	menuCloseSprite->SetScale({ 1280.0f, 720.0f });
+	menuCloseSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ステージ1
+	Sprite* newStage1Sprite = new Sprite();
+	newStage1Sprite->SetTextureNum(26);
+	newStage1Sprite->Initialize();
+	stage1Sprite.reset(newStage1Sprite);
+	stage1Sprite->SetAlpha(1.0f);
+	stage1Sprite->SetScale({ 1280.0f, 720.0f });
+	stage1Sprite->SetPosition({ 0.0f, 0.0 });
+
+	//ステージ2
+	Sprite* newStage2Sprite = new Sprite();
+	newStage2Sprite->SetTextureNum(27);
+	newStage2Sprite->Initialize();
+	stage2Sprite.reset(newStage2Sprite);
+	stage2Sprite->SetAlpha(1.0f);
+	stage2Sprite->SetScale({ 1280.0f, 720.0f });
+	stage2Sprite->SetPosition({ 0.0f, 0.0 });
+
+	//ステージ3
+	Sprite* newStage3Sprite = new Sprite();
+	newStage3Sprite->SetTextureNum(28);
+	newStage3Sprite->Initialize();
+	stage3Sprite.reset(newStage3Sprite);
+	stage3Sprite->SetAlpha(1.0f);
+	stage3Sprite->SetScale({ 1280.0f, 720.0f });
+	stage3Sprite->SetPosition({ 0.0f, 0.0 });
 
 	//カメラ初期化
 	Camera::SetInput(input_);
@@ -339,6 +462,9 @@ void GameScene::Update()
 	billboardSprite->SetScale(XMFLOAT3(2.5f, 0.3f, 1.0f));
 	billboardSprite->Update();
 
+	//スプライト更新
+	UpdateSprite();
+
 	switch (scene) {
 
 	case PLAY:
@@ -569,6 +695,71 @@ void GameScene::UpdateCollider()
 	ColliderManager::PostUpdate();
 }
 
+void GameScene::UpdateSprite()
+{
+	//シーン選択
+	if (serectScene) {
+		titleSerectButtonSprite->SetColor({ 1,1,1 });
+		stageSerectButtonSprite->SetColor({ 1,0,0 });
+	}
+	else {
+		titleSerectButtonSprite->SetColor({ 1,0,0 });
+		stageSerectButtonSprite->SetColor({ 1,1,1 });
+	}
+
+	//ステージ選択
+	switch (serectStage) {
+	case 0:
+		stage1Sprite->SetColor({ 1,0,0 });
+		stage2Sprite->SetColor({ 1,1,1 });
+		stage3Sprite->SetColor({ 1,1,1 });
+		break;
+
+	case 1:
+		stage1Sprite->SetColor({ 1,1,1 });
+		stage2Sprite->SetColor({ 1,0,0 });
+		stage3Sprite->SetColor({ 1,1,1 });
+		break;
+
+	case 2:
+		stage1Sprite->SetColor({ 1,1,1 });
+		stage2Sprite->SetColor({ 1,1,1 });
+		stage3Sprite->SetColor({ 1,0,0 });
+		break;
+	}
+
+	switch (scene) {
+	case TITLE:
+		titleSprite->Update();
+		break;
+	case SERECT:
+		stageSelectSprite->Update();
+		stage1Sprite->Update();
+		stage2Sprite->Update();
+		stage3Sprite->Update();
+		break;
+	case PLAY:
+		menuButtonSprite->Update();
+		break;
+	case MENU:
+		menuSprite->Update();
+		menuCloseSprite->Update();
+		titleSerectButtonSprite->Update();
+		stageSerectButtonSprite->Update();
+		break;
+	case GAMEOVER:
+		gameoverSprite->Update();
+		titleSerectButtonSprite->Update();
+		stageSerectButtonSprite->Update();
+		break;
+	case CLEAR:
+		clearSprite->Update();
+		titleSerectButtonSprite->Update();
+		stageSerectButtonSprite->Update();
+		break;
+	}
+}
+
 void GameScene::SceneChange()
 {
 	switch (scene) {
@@ -580,11 +771,12 @@ void GameScene::SceneChange()
 		break;
 	case SERECT:
 		//左右キーでステージセレクト、スペースで決定
-		if (input_->TriggerKey(DIK_RIGHT)) {
+		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
 			if (serectStage < 3) {
 				serectStage++;
 			}
-		}else if (input_->TriggerKey(DIK_LEFT)) {
+		}
+		else if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
 			if (serectStage > 0) {
 				serectStage--;
 			}
@@ -605,13 +797,18 @@ void GameScene::SceneChange()
 		else if (input_->TriggerKey(DIK_M)) {
 			scene = MENU;
 		}
+
+		if (input_->TriggerKey(DIK_C)) {
+			isClear = true;
+		}
+
 		break;
 	case MENU:
 		//左右キーでシーンセレクト、スペースで決定
-		if (input_->TriggerKey(DIK_RIGHT)) {
+		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
 			serectScene = 1;
 		}
-		else if (input_->TriggerKey(DIK_LEFT)) {
+		else if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
 			serectScene = 0;
 		}
 
@@ -637,10 +834,10 @@ void GameScene::SceneChange()
 
 	case GAMEOVER:
 		//左右キーでシーンセレクト、スペースで決定
-		if (input_->TriggerKey(DIK_RIGHT)) {
+		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
 			serectScene = 1;
 		}
-		else if (input_->TriggerKey(DIK_LEFT)) {
+		else if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
 			serectScene = 0;
 		}
 		if (input_->TriggerKey(DIK_SPACE)) {
@@ -660,10 +857,10 @@ void GameScene::SceneChange()
 
 	case CLEAR:
 		//左右キーでシーンセレクト、スペースで決定
-		if (input_->TriggerKey(DIK_RIGHT)) {
+		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
 			serectScene = 1;
 		}
-		else if (input_->TriggerKey(DIK_LEFT)) {
+		else if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
 			serectScene = 0;
 		}
 		if (input_->TriggerKey(DIK_SPACE)) {
@@ -731,7 +928,36 @@ void GameScene::DrawCollider()
 
 void GameScene::DrawSprite()
 {
-	/*enemy->DrawSprite(dxCommon_->GetCommandList());*/
+	switch (scene) {
+	case TITLE:
+		titleSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case SERECT:
+		stageSelectSprite->Draw(dxCommon_->GetCommandList());
+		stage1Sprite->Draw(dxCommon_->GetCommandList());
+		stage2Sprite->Draw(dxCommon_->GetCommandList());
+		stage3Sprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case PLAY:
+		menuButtonSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case MENU:
+		menuSprite->Draw(dxCommon_->GetCommandList());
+		menuCloseSprite->Draw(dxCommon_->GetCommandList());
+		titleSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		stageSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case GAMEOVER:
+		gameoverSprite->Draw(dxCommon_->GetCommandList());
+		titleSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		stageSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case CLEAR:
+		clearSprite->Draw(dxCommon_->GetCommandList());
+		titleSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		stageSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	}
 }
 
 void GameScene::DrawParticle()

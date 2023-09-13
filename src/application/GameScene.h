@@ -51,6 +51,7 @@ public:
 	//更新
 	void Update();
 	void UpdateCollider();
+	void UpdateSprite();
 	//シーン切り替え
 	void SceneChange();
 	//描画
@@ -160,4 +161,19 @@ private:
 	//ビルボード　
 	std::unique_ptr<BillboardSprite>billboardSprite;
 	std::unique_ptr<BillboardSpriteModel>billboardSpriteModel;
+
+	//画像
+	std::unique_ptr<Sprite> titleSprite;
+	std::unique_ptr<Sprite> gameoverSprite;
+	std::unique_ptr<Sprite> clearSprite;
+	std::unique_ptr<Sprite> menuSprite;
+	std::unique_ptr<Sprite> titleSerectButtonSprite;
+	std::unique_ptr<Sprite> stageSerectButtonSprite;
+
+	std::unique_ptr<Sprite> stageSelectSprite;
+	std::unique_ptr<Sprite> menuButtonSprite;
+	std::unique_ptr<Sprite> menuCloseSprite;
+	std::unique_ptr<Sprite> stage1Sprite;
+	std::unique_ptr<Sprite> stage2Sprite;
+	std::unique_ptr<Sprite> stage3Sprite;
 };
