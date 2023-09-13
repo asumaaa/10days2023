@@ -47,8 +47,10 @@ public:
 	void SetBullet(PlayerBullet* playerBullet) { Player::bullet = playerBullet; }
 	void SetObject(FbxObject3D* object);
 	void SetSRV(ID3D12DescriptorHeap* SRV);
-	void HitPlane();
+	void SetStageMid(XMFLOAT3 stageMid) { this->stageMid = stageMid; }
 
+	//当たり判定
+	void HitPlane();
 	void HitEnemy();
 
 	//リセット
@@ -95,6 +97,10 @@ public:
 	XMFLOAT3 posVelocity = { 0.0f,0.0f,0.0f };
 	//角度ベクトル
 	XMFLOAT3 rotVelocity = { 0.0f,0.0f,0.0f };
+	//ステージの中心座標
+	XMFLOAT3 stageMid = {};
+	//ステージのサイズ
+	XMFLOAT3 stageSize = { 40,1,40 };
 
 	//当たり判定関連
 	//接地フラグ

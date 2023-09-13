@@ -342,7 +342,7 @@ void Enemy::SetObject(FbxObject3D* object)
 	rotation.emplace_back(object->GetRotation());
 	scale.emplace_back(object->GetScale());
 
-	SetTypeData(HomingMoveShotEnemy);
+	SetTypeData(NormalShotXZEnemy);
 }
 
 void Enemy::HitPlane()

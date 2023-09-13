@@ -97,8 +97,67 @@ void Player::KeyControl()
 	posVelocity.z = (input->PushKey(DIK_W) - input->PushKey(DIK_S)) * posSpeed;
 	//進行ベクトルを回転
 	posVelocity = rollRotation(posVelocity, rotation1);
-	//進行ベクトルを加算
-	position = position + posVelocity;
+
+	//進行ベクトルを加算(X)、範囲外に行くなら加算しない
+	float stageRight = stageMid.x + (stageSize.x);
+	float stageLeft = stageMid.x - (stageSize.x);
+
+	bool isAdd = false;
+
+	bool isPuls;
+	if (posVelocity.x > 0) {
+		isPuls = true;
+	}
+	else {
+		isPuls = false;
+	}
+
+	if (isPuls) {
+
+		if (position.x + posVelocity.x < stageRight) {
+			isAdd = true;
+		}
+
+	}
+	else {
+		if (position.x + posVelocity.x > stageLeft) {
+			isAdd = true;
+		}
+	}
+
+	if (isAdd) {
+		position.x += posVelocity.x;
+	}
+
+	//進行ベクトルを加算(Z)、範囲外に行くなら加算しない
+	float stageUp = stageMid.z + (stageSize.z);
+	float stageDown = stageMid.z - (stageSize.z);
+	isAdd = false;
+
+	if (posVelocity.z > 0) {
+		isPuls = true;
+	}
+	else {
+		isPuls = false;
+	}
+
+	if (isPuls) {
+
+		if (position.z + posVelocity.z < stageUp) {
+			isAdd = true;
+		}
+
+	}
+	else {
+		if (position.z + posVelocity.z > stageDown) {
+			isAdd = true;
+		}
+	}
+
+	if (isAdd) {
+		position.z += posVelocity.z;
+	}
+
 }
 
 void Player::UpdateGravity()

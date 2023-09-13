@@ -48,18 +48,18 @@ void EnemyBullet::Update()
 
 void EnemyBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	/*for (std::unique_ptr<FbxObject3D>& objects : object)
+	for (std::unique_ptr<FbxObject3D>& objects : object)
 	{
 		objects->Draw(cmdList);
-	}*/
+	}
 }
 
 void EnemyBullet::DrawLightView(ID3D12GraphicsCommandList* cmdList)
 {
-	/*for (std::unique_ptr<FbxObject3D>& objects : object)
+	for (std::unique_ptr<FbxObject3D>& objects : object)
 	{
 		objects->DrawLightView(cmdList);
-	}*/
+	}
 }
 
 void EnemyBullet::Move()
@@ -117,7 +117,7 @@ void EnemyBullet::DeleteBullet()
 	for (int i = 0; i < object.size(); i++)
 	{
 		//ˆê’èŽžŠÔŒo‚Á‚½‚ç
-		if (timer[i] == destoryTime)
+		if (timer[i] >= destoryTime)
 		{
 			position.erase(position.begin() + i);
 			rotation.erase(rotation.begin() + i);

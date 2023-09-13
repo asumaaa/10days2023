@@ -48,18 +48,18 @@ void PlayerBullet::Update()
 
 void PlayerBullet::Draw(ID3D12GraphicsCommandList* cmdList)
 {
-	/*for (std::unique_ptr<FbxObject3D>& objects : object)
+	for (std::unique_ptr<FbxObject3D>& objects : object)
 	{
 		objects->Draw(cmdList);
-	}*/
+	}
 }
 
 void PlayerBullet::DrawLightView(ID3D12GraphicsCommandList* cmdList)
 {
-	/*for (std::unique_ptr<FbxObject3D>& objects : object)
+	for (std::unique_ptr<FbxObject3D>& objects : object)
 	{
 		objects->DrawLightView(cmdList);
-	}*/
+	}
 }
 
 void PlayerBullet::Move()
