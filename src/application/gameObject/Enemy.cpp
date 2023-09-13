@@ -108,7 +108,7 @@ void Enemy::TypeUpdate()
 			if (!isDead_[i]) {
 				switch (type_[i]) {
 
-					//�ړ��n
+				//移動系
 				case MoveXEnemy:
 					MoveX(i);
 					break;
@@ -126,7 +126,7 @@ void Enemy::TypeUpdate()
 					MoveHoming(i);
 					break;
 
-					//�ˌ��n
+				//射撃系
 				case NormalShotXEnemy:
 					ShotX(i);
 					break;
@@ -144,7 +144,7 @@ void Enemy::TypeUpdate()
 					ShotHoming(i);
 					break;
 
-					//�����n,����n
+				//複合系
 				case HomingMoveShotEnemy:
 					MoveHoming(i);
 					ShotHoming(i);
