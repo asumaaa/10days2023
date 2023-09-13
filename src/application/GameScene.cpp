@@ -621,7 +621,7 @@ void GameScene::UpdateCollider()
 						if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
 						{
 							enemy->OnCollisionToEnemy(object1->GetEnemyNum(), player->GetPosition());
-						//プレイヤー被弾処理
+							//プレイヤー被弾処理
 							player->HitEnemy();
 						}
 					}
@@ -665,35 +665,37 @@ void GameScene::UpdateCollider()
 	//}
 
 	//敵と弾の当たり判定
-	//弾が一つ以上あれば
-	if (playerBullet->GetBulletNum() >= 1)
-	{
-		for (int i = 0; i < playerBullet->GetBulletNum(); i++)
-		{
-			for (int j = 0; j < enemy->GetEnemyNum(); j++)
-			{
-				if (!enemy->GetIsDead(enemyNum)) {
-					for (int i = 0; i < playerBullet->GetBulletNum(); i++)
-					{
-						if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
-							object0->GetColliderData()))
-						{
-							//パーティクル
-							sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-							explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-							explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-							//弾
-							playerBullet->SetHitFlag(true, i);
 
-							//敵当たり判定処理
-							enemy->OnCollisionToBullet(object0->GetEnemyNum());
+		//弾が一つ以上あれば
+		if (playerBullet->GetBulletNum() >= 1)
+		{
+			for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+			{
+				for (int j = 0; j < enemy->GetEnemyNum(); j++)
+				{
+					if (!enemy->GetIsDead(enemyNum)) {
+						for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+						{
+							if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
+								enemy->GetColliderData(j)))
+							{
+								//パーティクル
+								sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+								explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+								explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+								//弾
+								playerBullet->SetHitFlag(true, i);
+
+								//敵当たり判定処理
+								enemy->OnCollisionToBullet(j);
+							}
 						}
 					}
 				}
+				enemyNum++;
 			}
-			enemyNum++;
 		}
-	}
+	
 
 	//for (int i = 0; i < enemy->GetSize();i++) {
 	//	if (enemy->GetIsDead(i)) {
