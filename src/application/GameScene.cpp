@@ -530,7 +530,7 @@ void GameScene::UpdateCollider()
 					//’e
 					playerBullet->SetHitFlag(true, i);
 					//“G“–‚½‚è”»’èˆ—
-					/*enemy->OnCollisionToBullet(object0->GetEnemyNum());*/
+					enemy->OnCollisionToBullet(j);
 				}
 			}
 		}

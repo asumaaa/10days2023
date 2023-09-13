@@ -342,6 +342,16 @@ void Enemy::SetObject(FbxObject3D* object)
 	scale.emplace_back(object->GetScale());
 	enemyNum++;
 
+	if (object->GetFileName() == "enemy_homingShotEnemy")SetTypeData(HomingShotEnemy); 
+	else if (object->GetFileName() == "enemy_normalShotXEnemy")SetTypeData(NormalShotXEnemy);
+	else if (object->GetFileName() == "enemy_normalShotZEnemy")SetTypeData(NormalShotZEnemy);
+	else if (object->GetFileName() == "enemy_moveXZEnemy")SetTypeData(MoveXZEnemy);
+	else if (object->GetFileName() == "enemy_homingMoveShotEnemy")SetTypeData(HomingMoveShotEnemy);
+	else if (object->GetFileName() == "enemy_homingMoveEnemy")SetTypeData(HomingMoveEnemy);
+	else if (object->GetFileName() == "enemy_normalShotXZEnemy")SetTypeData(NormalShotXZEnemy);
+	else if (object->GetFileName() == "enemy_normalShotZEnemy")SetTypeData(NormalShotZEnemy);
+	else { SetTypeData(HomingShotEnemy); }
+
 	SetTypeData(HomingMoveShotEnemy);
 	/*SetStageNumber();*/
 }
