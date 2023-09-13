@@ -70,6 +70,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("enemy"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("sphere"));
+	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("skydome"));
 
 	//スプライト
 	Sprite::SetDevice(dxCommon->GetDevice());
@@ -439,6 +440,26 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		//コライダーのセット
 		ColliderManager::SetCollider(jsonLoader->GetColliderData(i));
 	}
+
+	//スカイドーム
+	FbxObject3D* newSkydome = new FbxObject3D;
+	newSkydome->Initialize();
+	//オブジェクトの配置
+	newSkydome->SetPosition({ 0,0,0 });
+	newSkydome->SetScale({ 1000,1000,1000 });
+	newSkydome->SetRotation({ 0,0,0 });
+	//テクスチャデータのセット
+	newSkydome->SetTextureNum(0);
+	//モデルデータのセット
+	for (std::unique_ptr<FbxModel>& model : models)
+	{
+		if (model->GetFileName() == "skydome")
+		{
+			newSkydome->SetModel(model.get());
+		}
+	}
+	skydome.reset(newSkydome);
+
 }
 
 void GameScene::Finalize()
@@ -467,6 +488,9 @@ void GameScene::Update()
 	camera_->Update();
 	//コントローラー更新
 	dxInput->InputProcess();
+
+	//スカイドーム更新
+	skydome->Update();
 
 	billboardSprite->SetPosition(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	billboardSprite->SetScale(XMFLOAT3(2.5f, 0.3f, 1.0f));
@@ -667,35 +691,35 @@ void GameScene::UpdateCollider()
 	//敵と弾の当たり判定
 
 		//弾が一つ以上あれば
-		if (playerBullet->GetBulletNum() >= 1)
+	if (playerBullet->GetBulletNum() >= 1)
+	{
+		for (int i = 0; i < playerBullet->GetBulletNum(); i++)
 		{
-			for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+			for (int j = 0; j < enemy->GetEnemyNum(); j++)
 			{
-				for (int j = 0; j < enemy->GetEnemyNum(); j++)
-				{
-					if (!enemy->GetIsDead(enemyNum)) {
-						for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+				if (!enemy->GetIsDead(enemyNum)) {
+					for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+					{
+						if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
+							enemy->GetColliderData(j)))
 						{
-							if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
-								enemy->GetColliderData(j)))
-							{
-								//パーティクル
-								sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-								explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-								explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-								//弾
-								playerBullet->SetHitFlag(true, i);
+							//パーティクル
+							sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+							explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+							explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+							//弾
+							playerBullet->SetHitFlag(true, i);
 
-								//敵当たり判定処理
-								enemy->OnCollisionToBullet(j);
-							}
+							//敵当たり判定処理
+							enemy->OnCollisionToBullet(j);
 						}
 					}
 				}
-				enemyNum++;
 			}
+			enemyNum++;
 		}
-	
+	}
+
 
 	//for (int i = 0; i < enemy->GetSize();i++) {
 	//	if (enemy->GetIsDead(i)) {
@@ -960,6 +984,7 @@ void GameScene::DrawFBXLightView()
 	enemy->DrawLightView(dxCommon_->GetCommandList());
 	player->DrawLightView(dxCommon_->GetCommandList());
 
+	skydome->DrawLightView(dxCommon_->GetCommandList());
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		object0->DrawLightView(dxCommon_->GetCommandList());
@@ -968,13 +993,16 @@ void GameScene::DrawFBXLightView()
 
 void GameScene::DrawFBX()
 {
-	enemy->Draw(dxCommon_->GetCommandList());
-	player->Draw(dxCommon_->GetCommandList());
+
+	skydome->Draw(dxCommon_->GetCommandList());
 
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		object0->Draw(dxCommon_->GetCommandList());
 	}
+	enemy->Draw(dxCommon_->GetCommandList());
+	player->Draw(dxCommon_->GetCommandList());
+
 }
 
 void GameScene::DrawCollider()
@@ -1038,6 +1066,8 @@ void GameScene::SetSRV(ID3D12DescriptorHeap* SRV)
 {
 	player->SetSRV(SRV);
 	enemy->SetSRV(SRV);
+
+	skydome->SetSRV(SRV);
 
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
