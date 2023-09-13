@@ -603,6 +603,8 @@ void GameScene::UpdateCollider()
 		}
 	}
 
+	int enemyNum = 0;
+
 	//プレイヤーと敵との判定
 
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
@@ -613,19 +615,24 @@ void GameScene::UpdateCollider()
 			{
 				if (object1->GetFileName() == "enemy")
 				{
-					//当たっていたら
-					if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
-					{
-						enemy->OnCollisionToEnemy(object1->GetEnemyNum(), player->GetPosition());
+
+					if (!enemy->GetIsDead(enemyNum)) {
+						//当たっていたら
+						if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
+						{
+							enemy->OnCollisionToEnemy(object1->GetEnemyNum(), player->GetPosition());
 						//プレイヤー被弾処理
-						player->HitEnemy();
+							player->HitEnemy();
+						}
 					}
+					enemyNum++;
 				}
 			}
 		}
 	}
 
 	int objectNum = 0;
+	enemyNum = 0;
 
 	//弾と敵との判定
 	//for (std::unique_ptr<FbxObject3D>& object0 : object)
@@ -665,19 +672,26 @@ void GameScene::UpdateCollider()
 		{
 			for (int j = 0; j < enemy->GetEnemyNum(); j++)
 			{
-				if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
-					enemy->GetColliderData(j)))
-				{
-					//パーティクル
-					sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-					explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-					explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-					//弾
-					playerBullet->SetHitFlag(true, i);
-					//敵当たり判定処理
-					enemy->OnCollisionToBullet(j);
+				if (!enemy->GetIsDead(enemyNum)) {
+					for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+					{
+						if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
+							object0->GetColliderData()))
+						{
+							//パーティクル
+							sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+							explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+							explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+							//弾
+							playerBullet->SetHitFlag(true, i);
+
+							//敵当たり判定処理
+							enemy->OnCollisionToBullet(object0->GetEnemyNum());
+						}
+					}
 				}
 			}
+			enemyNum++;
 		}
 	}
 
@@ -941,6 +955,8 @@ void GameScene::Draw()
 
 void GameScene::DrawFBXLightView()
 {
+	enemy->DrawLightView(dxCommon_->GetCommandList());
+	player->DrawLightView(dxCommon_->GetCommandList());
 
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
@@ -950,6 +966,9 @@ void GameScene::DrawFBXLightView()
 
 void GameScene::DrawFBX()
 {
+	enemy->Draw(dxCommon_->GetCommandList());
+	player->Draw(dxCommon_->GetCommandList());
+
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		object0->Draw(dxCommon_->GetCommandList());
@@ -1015,6 +1034,9 @@ void GameScene::ResetSceneData()
 
 void GameScene::SetSRV(ID3D12DescriptorHeap* SRV)
 {
+	player->SetSRV(SRV);
+	enemy->SetSRV(SRV);
+
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		object0->SetSRV(SRV);
