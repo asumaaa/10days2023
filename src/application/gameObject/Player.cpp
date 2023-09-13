@@ -11,6 +11,12 @@ DXInput* Player::dxInput = nullptr;
 
 void Player::Initialize()
 {
+	//ŽËŒ‚‰¹
+	shotSE = new SoundManager();
+	shotSE->SoundLoadWave("Resources/Audio/shotSE.wav");
+	//”í’e
+	damageSE = new SoundManager();
+	damageSE->SoundLoadWave("Resources/Audio/damageSE.wav");
 }
 
 void Player::Update()
@@ -49,6 +55,9 @@ void Player::UpdateBullet()
 {
 	if (input->TriggerKey(DIK_RETURN))
 	{
+		shotSE->StopWave();
+		shotSE->SoundPlayWave(false, shotSEVolume);
+
 		//ƒVƒ‡ƒbƒgƒtƒ‰ƒO‚ð—§‚Ä‚é
 		bullet->SetShotFlag(true);
 		
@@ -234,6 +243,8 @@ void Player::HitEnemy()
 {
 	//–³“GŽžŠÔ‚Å‚Í‚È‚©‚Á‚½‚çhp‚ðŒ¸‚ç‚µ–³“GŽžŠÔ’Ç‰Á
 	if (!invTimer) {
+		damageSE->StopWave();
+		damageSE->SoundPlayWave(false, damageSEVolume);
 		HP--;
 		invTimer = InvTime;
 	}
