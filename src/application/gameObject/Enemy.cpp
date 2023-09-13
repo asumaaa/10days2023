@@ -48,7 +48,6 @@ void Enemy::UpdateObject()
 			objects->SetPosition(position[i]);
 			objects->SetRotation(rotation[i]);
 			objects->SetScale(scale[i]);
-			objects->Update();
 		}
 
 		i++;
@@ -344,6 +343,7 @@ void Enemy::SetObject(FbxObject3D* object)
 	enemyNum++;
 
 	SetTypeData(HomingMoveShotEnemy);
+	/*SetStageNumber();*/
 }
 
 void Enemy::HitPlane()
@@ -414,7 +414,7 @@ void Enemy::SetTypeData(int type)
 
 void Enemy::SetStageNumber()
 {
-	/*int i = 0;
+	int i = 0;
 	for (std::unique_ptr<FbxObject3D>& objects : object)
 	{
 		if (objects->GetFileName() == "enemy1_homingShotEnemy" || objects->GetFileName() == "enemy1_normalShotXEnemy"
@@ -463,7 +463,7 @@ void Enemy::SetStageNumber()
 			stageNember_.emplace_back(9);
 		}
 		i++;
-	}*/
+	}
 }
 
 

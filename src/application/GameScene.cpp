@@ -224,7 +224,6 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newEnemy->Initialize();
 	newEnemy->SetBullet(enemyBullet.get());
 	enemy.reset(newEnemy);
-	int enemyNum = 0;
 
 	//平面
 	/*Plane::SetCamera(camera_.get());
@@ -271,6 +270,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 					newObject->SetModel(model.get());
 				}
 			}
+			if (model->GetFileName() == "enemy")
+			{
+				if (jsonLoader->GetFileName(i) == "enemy_homingShotEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_normalShotYEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy")
+				{
+					newObject->SetModel(model.get());
+				}
+			}
 		}
 
 		//オブジェクトの配置
@@ -289,13 +299,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			/*object.pop_back();*/
 		}
 		//敵のオブジェクトがあったら
-		if (jsonLoader->GetFileName(i) == "enemy")
+		if (jsonLoader->GetFileName(i) == "enemy_homingShotEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_normalShotYEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy")
 		{
 			enemy->SetObject(object.back().get());
-
-			//敵番号セット
-			object.back().get()->SetEnemyNum(enemyNum);
-			enemyNum++;
 		}
 		//平面のオブジェクトがあったら
 	/*	if (jsonLoader->GetFileName(i) == "plane")
@@ -408,23 +418,23 @@ void GameScene::UpdateCollider()
 	ColliderManager::PreUpdate();
 
 	//プレイヤーと平面との判定
-	for (std::unique_ptr<FbxObject3D>& object0 : object)
-	{
-		if (object0->GetFileName() == "player")
-		{
-			for (std::unique_ptr<FbxObject3D>& object1 : object)
-			{
-				if (object1->GetColliderType() == "Plane")
-				{
-					//当たっていたら
-					while (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
-					{
-						player->HitPlane();
-					}
-				}
-			}
-		}
-	}
+	//for (std::unique_ptr<FbxObject3D>& object0 : object)
+	//{
+	//	if (object0->GetFileName() == "player")
+	//	{
+	//		for (std::unique_ptr<FbxObject3D>& object1 : object)
+	//		{
+	//			if (object1->GetColliderType() == "Plane")
+	//			{
+	//				//当たっていたら
+	//				while (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
+	//				{
+	//					player->HitPlane();
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
 	//プレイヤーと敵弾との判定
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
@@ -452,23 +462,23 @@ void GameScene::UpdateCollider()
 	}
 
 	//プレイヤーと敵との判定
-	for (std::unique_ptr<FbxObject3D>& object0 : object)
-	{
-		if (object0->GetFileName() == "player")
-		{
-			for (std::unique_ptr<FbxObject3D>& object1 : object)
-			{
-				if (object1->GetFileName() == "enemy")
-				{
-					//当たっていたら
-					if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
-					{
-						enemy->OnCollisionToEnemy(object1->GetEnemyNum(), player->GetPosition());
-					}
-				}
-			}
-		}
-	}
+	//for (std::unique_ptr<FbxObject3D>& object0 : object)
+	//{
+	//	if (object0->GetFileName() == "player")
+	//	{
+	//		for (std::unique_ptr<FbxObject3D>& object1 : object)
+	//		{
+	//			if (object1->GetFileName() == "enemy")
+	//			{
+	//				//当たっていたら
+	//				if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
+	//				{
+	//					enemy->OnCollisionToEnemy(object1->GetEnemyNum(), player->GetPosition());
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 
 	int objectNum = 0;
 
@@ -504,27 +514,27 @@ void GameScene::UpdateCollider()
 
 	//敵と弾の当たり判定
 	//弾が一つ以上あれば
-	//if (playerBullet->GetBulletNum() >= 1)
-	//{
-	//	for (int i = 0; i < playerBullet->GetBulletNum(); i++)
-	//	{
-	//		for (int j = 0; j < enemy->GetEnemyNum(); j++)
-	//		{
-	//			if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
-	//				enemy->GetColliderData(j)))
-	//			{
-	//				//パーティクル
-	//				sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-	//				explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-	//				explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-	//				//弾
-	//				playerBullet->SetHitFlag(true, i);
-	//				//敵当たり判定処理
-	//				/*enemy->OnCollisionToBullet(object0->GetEnemyNum());*/
-	//			}
-	//		}
-	//	}
-	//}
+	if (playerBullet->GetBulletNum() >= 1)
+	{
+		for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+		{
+			for (int j = 0; j < enemy->GetEnemyNum(); j++)
+			{
+				if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
+					enemy->GetColliderData(j)))
+				{
+					//パーティクル
+					sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+					explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+					explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+					//弾
+					playerBullet->SetHitFlag(true, i);
+					//敵当たり判定処理
+					/*enemy->OnCollisionToBullet(object0->GetEnemyNum());*/
+				}
+			}
+		}
+	}
 
 	//for (int i = 0; i < enemy->GetSize();i++) {
 	//	if (enemy->GetIsDead(i)) {

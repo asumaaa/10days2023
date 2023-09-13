@@ -69,7 +69,7 @@ void Player::Move()
 	//UpdateJump();
 
 	//重力更新
-	UpdateGravity();
+	/*UpdateGravity();*/
 	
 	//キー操作
 	KeyControl();
