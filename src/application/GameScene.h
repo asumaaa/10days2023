@@ -62,6 +62,8 @@ public:
 	void DrawSprite();
 	void DrawParticle();
 
+	void ChangeStage();
+
 
 	//敵のオブジェクト削除
 	void DeleteEnemy1();
