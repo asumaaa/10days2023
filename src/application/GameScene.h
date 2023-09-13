@@ -170,6 +170,7 @@ private:
 	int drawSprite[1] = { 0 };
 	int drawCollider[1] = { 1 };
 
+	int stageNum = 1;
 	//ビルボード　
 	std::unique_ptr<BillboardSprite>billboardSprite;
 	std::unique_ptr<BillboardSpriteModel>billboardSpriteModel;

@@ -73,7 +73,8 @@ public:
 	void SetObject(FbxObject3D* object);
 	void HitPlane();
 	void SetTypeData(int type);
-	void SetStageNumber();
+	void SetStageNumber(XMFLOAT3 pos);
+	void SetStageNum(int num) { stageNum = num; };
 
 	//void SetType(int num,int type) { this->type[num] = type; }
 	void SetStageMid(XMFLOAT3 stageMid) { this->stageMid = stageMid; }
@@ -107,6 +108,8 @@ public:
 
 	void DeleteEnemy();
 
+	//敵が全部死んだか管理する関数
+	void CheckDeadEnemy();
 	//そのステージの敵が全て消滅したかのフラグ
 	bool GetDeadEnemy1() { return deadEnemy1; }
 
@@ -175,5 +178,10 @@ public:
 
 	//敵の総数
 	int enemyNum = 0;
+
+	//そのステージの敵が全滅したか
+	bool stageFlag[9];
+	//現在のステージ
+	int stageNum = 1;
 };
 

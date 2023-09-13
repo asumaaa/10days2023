@@ -16,6 +16,11 @@ void Enemy::Initialize()
 	newSprite->SetTextureNum(4);
 	newSprite->Initialize();
 	spriteHpBar.reset(newSprite);
+
+	for (int i = 0; i < 9; i++)
+	{
+		stageFlag[i] = false;
+	}
 }
 
 void Enemy::Update(XMFLOAT3 playerPos)
@@ -98,51 +103,53 @@ void Enemy::TypeUpdate()
 
 	int i = 0;
 	for (std::unique_ptr<FbxObject3D>& objects : object) {
+		if (stageNum == stageNember_[i])
+		{
+			if (!isDead_[i]) {
+				switch (type_[i]) {
 
-		if (!isDead_[i]) {
-			switch (type_[i]) {
+					//�ړ��n
+				case MoveXEnemy:
+					MoveX(i);
+					break;
 
-				//移動系
-			case MoveXEnemy:
-				MoveX(i);
-				break;
+				case MoveZEnemy:
+					MoveZ(i);
+					break;
 
-			case MoveZEnemy:
-				MoveZ(i);
-				break;
+				case MoveXZEnemy:
+					MoveX(i);
+					MoveZ(i);
+					break;
 
-			case MoveXZEnemy:
-				MoveX(i);
-				MoveZ(i);
-				break;
+				case HomingMoveEnemy:
+					MoveHoming(i);
+					break;
 
-			case HomingMoveEnemy:
-				MoveHoming(i);
-				break;
+					//�ˌ��n
+				case NormalShotXEnemy:
+					ShotX(i);
+					break;
 
-				//射撃系
-			case NormalShotXEnemy:
-				ShotX(i);
-				break;
+				case NormalShotZEnemy:
+					ShotZ(i);
+					break;
 
-			case NormalShotZEnemy:
-				ShotZ(i);
-				break;
+				case NormalShotXZEnemy:
+					ShotX(i);
+					ShotZ(i);
+					break;
 
-			case NormalShotXZEnemy:
-				ShotX(i);
-				ShotZ(i);
-				break;
+				case HomingShotEnemy:
+					ShotHoming(i);
+					break;
 
-			case HomingShotEnemy:
-				ShotHoming(i);
-				break;
-
-				//複合系,特殊系
-			case HomingMoveShotEnemy:
-				MoveHoming(i);
-				ShotHoming(i);
-				break;
+					//�����n,����n
+				case HomingMoveShotEnemy:
+					MoveHoming(i);
+					ShotHoming(i);
+					break;
+				}
 			}
 		}
 
@@ -353,7 +360,7 @@ void Enemy::SetObject(FbxObject3D* object)
 	else { SetTypeData(HomingShotEnemy); }
 
 	SetTypeData(HomingMoveShotEnemy);
-
+	SetStageNumber(object->GetPosition());
 }
 
 void Enemy::HitPlane()
@@ -422,58 +429,27 @@ void Enemy::SetTypeData(int type)
 
 }
 
-void Enemy::SetStageNumber()
+void Enemy::SetStageNumber(XMFLOAT3 pos)
 {
-	int i = 0;
-	for (std::unique_ptr<FbxObject3D>& objects : object)
+	if (pos.x >= -40 && pos.x < 40)
 	{
-		if (objects->GetFileName() == "enemy1_homingShotEnemy" || objects->GetFileName() == "enemy1_normalShotXEnemy"
-			|| objects->GetFileName() == "enemy1_normalShotYEnemy" || objects->GetFileName() == "enemy1_normalShotZEnemy")
-		{
-			stageNember_.emplace_back(1);
-		}
-		if (objects->GetFileName() == "enemy2_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
-			|| objects->GetFileName() == "enemy2_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
-		{
-			stageNember_.emplace_back(2);
-		}
-		if (objects->GetFileName() == "enemy3_homingShotEnemy" || objects->GetFileName() == "enemy3_normalShotXEnemy"
-			|| objects->GetFileName() == "enemy3_normalShotYEnemy" || objects->GetFileName() == "enemy3_normalShotZEnemy")
-		{
-			stageNember_.emplace_back(3);
-		}
-		if (objects->GetFileName() == "enemy4_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
-			|| objects->GetFileName() == "enemy4_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
-		{
-			stageNember_.emplace_back(4);
-		}
-		if (objects->GetFileName() == "enemy5_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
-			|| objects->GetFileName() == "enemy5_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
-		{
-			stageNember_.emplace_back(5);
-		}
-		if (objects->GetFileName() == "enemy6_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
-			|| objects->GetFileName() == "enemy6_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
-		{
-			stageNember_.emplace_back(6);
-		}
-		if (objects->GetFileName() == "enemy7_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
-			|| objects->GetFileName() == "enemy7_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
-		{
-			stageNember_.emplace_back(7);
-		}
-		if (objects->GetFileName() == "enemy8_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
-			|| objects->GetFileName() == "enemy8_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
-		{
-			stageNember_.emplace_back(8);
-		}
-		if (objects->GetFileName() == "enemy9_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
-			|| objects->GetFileName() == "enemy9_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
-		{
-			stageNember_.emplace_back(9);
-		}
-		i++;
+		if (pos.z >= -40 && pos.z < 40)stageNember_.emplace_back(1);
+		else if (pos.z >= 40 && pos.z < 120)stageNember_.emplace_back(2);
+		else if (pos.z >= 120 && pos.z < 200)stageNember_.emplace_back(3);
 	}
+	else if (pos.x >= 40 && pos.x < 120)
+	{
+		if (pos.z >= -40 && pos.z < 40)stageNember_.emplace_back(4);
+		else if (pos.z >= 40 && pos.z < 120)stageNember_.emplace_back(5);
+		else if (pos.z >= 120 && pos.z < 200)stageNember_.emplace_back(6);
+	}
+	else if (pos.x >= 120 && pos.x < 200)
+	{
+		if (pos.z >= -40 && pos.z < 40)stageNember_.emplace_back(7);
+		else if (pos.z >= 40 && pos.z < 120)stageNember_.emplace_back(8);
+		else if (pos.z >= 120 && pos.z < 200)stageNember_.emplace_back(9);
+	}
+	else { stageNember_.emplace_back(9); }
 }
 
 
@@ -617,5 +593,16 @@ void Enemy::RefMoveZ(int i)
 void Enemy::DeleteEnemy()
 {
 	/*if*/
+}
+
+void Enemy::CheckDeadEnemy()
+{
+	/*for (int i = 0; i < enemyNum; i++)
+	{
+		if (isDead_[i] == true)
+		{
+			
+		}
+	}*/
 }
 
