@@ -21,7 +21,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	this->dxCommon_ = dxCommon;
 	this->input_ = input;
 
-	//ƒeƒNƒXƒ`ƒƒƒ}ƒl[ƒWƒƒ[
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	TextureManager::SetDevice(dxCommon->GetDevice());
 	TextureManager* newTextureManager = new TextureManager();
 	newTextureManager->Initialize();
@@ -43,26 +43,149 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newTextureManager->LoadFile(15, L"Resources/pictures/blackParticle.png");
 	newTextureManager->LoadFile(16, L"Resources/pictures/effect4.png");
 
+	newTextureManager->LoadFile(17, L"Resources/pictures/title.png");
+	newTextureManager->LoadFile(18, L"Resources/pictures/gameover.png");
+	newTextureManager->LoadFile(19, L"Resources/pictures/clear.png");
+	newTextureManager->LoadFile(20, L"Resources/pictures/titleSerectButton.png");
+	newTextureManager->LoadFile(21, L"Resources/pictures/stageSelectButton.png");
+	newTextureManager->LoadFile(22, L"Resources/pictures/menu.png");
+
+	newTextureManager->LoadFile(23, L"Resources/pictures/stageSelect.png");
+	newTextureManager->LoadFile(24, L"Resources/pictures/menuButton.png");
+	newTextureManager->LoadFile(25, L"Resources/pictures/menuClose.png");
+	newTextureManager->LoadFile(26, L"Resources/pictures/stage1.png");
+	newTextureManager->LoadFile(27, L"Resources/pictures/stage2.png");
+	newTextureManager->LoadFile(28, L"Resources/pictures/stage3.png");
+
 	textureManager.reset(newTextureManager);
 
-	//FBXƒ[ƒ_[‰Šú‰»
+	//FBXãƒ­ãƒ¼ãƒ€ãƒ¼åˆæœŸåŒ–
 	FbxLoader::GetInstance()->Initialize(dxCommon_->GetDevice());
-	//ƒeƒNƒXƒ`ƒƒƒ}ƒl[ƒWƒƒ[ƒZƒbƒg
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã‚»ãƒƒãƒˆ
 	FbxModel::SetTextureManager(textureManager.get());
 	FbxModel::SetDevice(dxCommon_->GetDevice());
-	//ƒ‚ƒfƒ‹–¼‚ğw’è‚µ‚Äƒtƒ@ƒCƒ‹“Ç‚İ‚İ
+	//ãƒ¢ãƒ‡ãƒ«åã‚’æŒ‡å®šã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("plane"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("player"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("enemy"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("sphere"));
 
-	//ƒXƒvƒ‰ƒCƒg
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	Sprite::SetDevice(dxCommon->GetDevice());
 	Sprite::SetSpriteManager(textureManager.get());
 	Sprite::CreateGraphicsPipeLine();
 
-	//ƒJƒƒ‰‰Šú‰»
+	//----------ç”»åƒ----------
+	//ã‚¿ã‚¤ãƒˆãƒ«
+	Sprite* newTitleSprite = new Sprite();
+	newTitleSprite->SetTextureNum(17);
+	newTitleSprite->Initialize();
+	titleSprite.reset(newTitleSprite);
+	titleSprite->SetAlpha(1.0f);
+	titleSprite->SetScale({ 1280.0f, 720.0f });
+	titleSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼
+	Sprite* newGameoverSprite = new Sprite();
+	newGameoverSprite->SetTextureNum(18);
+	newGameoverSprite->Initialize();
+	gameoverSprite.reset(newGameoverSprite);
+	gameoverSprite->SetAlpha(1.0f);
+	gameoverSprite->SetScale({ 1280.0f, 720.0f });
+	gameoverSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ã‚¯ãƒªã‚¢
+	Sprite* newClearSprite = new Sprite();
+	newClearSprite->SetTextureNum(19);
+	newClearSprite->Initialize();
+	clearSprite.reset(newClearSprite);
+	clearSprite->SetAlpha(1.0f);
+	clearSprite->SetScale({ 1280.0f, 720.0f });
+	clearSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ã‚¿ã‚¤ãƒˆãƒ«é¸æŠ
+	Sprite* newTitleSerectButtonSprite = new Sprite();
+	newTitleSerectButtonSprite->SetTextureNum(20);
+	newTitleSerectButtonSprite->Initialize();
+	titleSerectButtonSprite.reset(newTitleSerectButtonSprite);
+	titleSerectButtonSprite->SetAlpha(1.0f);
+	titleSerectButtonSprite->SetScale({ 1280.0f, 720.0f });
+	titleSerectButtonSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠ
+	Sprite* newStageSerectButtonSprite = new Sprite();
+	newStageSerectButtonSprite->SetTextureNum(21);
+	newStageSerectButtonSprite->Initialize();
+	stageSerectButtonSprite.reset(newStageSerectButtonSprite);
+	stageSerectButtonSprite->SetAlpha(1.0f);
+	stageSerectButtonSprite->SetScale({ 1280.0f, 720.0f });
+	stageSerectButtonSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+	Sprite* newMenuSprite = new Sprite();
+	newMenuSprite->SetTextureNum(22);
+	newMenuSprite->Initialize();
+	menuSprite.reset(newMenuSprite);
+	menuSprite->SetAlpha(1.0f);
+	menuSprite->SetScale({ 1280.0f, 720.0f });
+	menuSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆ
+	Sprite* newStageSelectSprite = new Sprite();
+	newStageSelectSprite->SetTextureNum(23);
+	newStageSelectSprite->Initialize();
+	stageSelectSprite.reset(newStageSelectSprite);
+	stageSelectSprite->SetAlpha(1.0f);
+	stageSelectSprite->SetScale({ 1280.0f, 720.0f });
+	stageSelectSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼é–‹ã
+	Sprite* newMenuButtonSprite = new Sprite();
+	newMenuButtonSprite->SetTextureNum(24);
+	newMenuButtonSprite->Initialize();
+	menuButtonSprite.reset(newMenuButtonSprite);
+	menuButtonSprite->SetAlpha(1.0f);
+	menuButtonSprite->SetScale({ 1280.0f, 720.0f });
+	menuButtonSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ãƒ¡ãƒ‹ãƒ¥ãƒ¼é–‰ã˜ã‚‹
+	Sprite* newMenuCloseSprite = new Sprite();
+	newMenuCloseSprite->SetTextureNum(25);
+	newMenuCloseSprite->Initialize();
+	menuCloseSprite.reset(newMenuCloseSprite);
+	menuCloseSprite->SetAlpha(1.0f);
+	menuCloseSprite->SetScale({ 1280.0f, 720.0f });
+	menuCloseSprite->SetPosition({ 0.0f, 0.0 });
+
+	//ã‚¹ãƒ†ãƒ¼ã‚¸1
+	Sprite* newStage1Sprite = new Sprite();
+	newStage1Sprite->SetTextureNum(26);
+	newStage1Sprite->Initialize();
+	stage1Sprite.reset(newStage1Sprite);
+	stage1Sprite->SetAlpha(1.0f);
+	stage1Sprite->SetScale({ 1280.0f, 720.0f });
+	stage1Sprite->SetPosition({ 0.0f, 0.0 });
+
+	//ã‚¹ãƒ†ãƒ¼ã‚¸2
+	Sprite* newStage2Sprite = new Sprite();
+	newStage2Sprite->SetTextureNum(27);
+	newStage2Sprite->Initialize();
+	stage2Sprite.reset(newStage2Sprite);
+	stage2Sprite->SetAlpha(1.0f);
+	stage2Sprite->SetScale({ 1280.0f, 720.0f });
+	stage2Sprite->SetPosition({ 0.0f, 0.0 });
+
+	//ã‚¹ãƒ†ãƒ¼ã‚¸3
+	Sprite* newStage3Sprite = new Sprite();
+	newStage3Sprite->SetTextureNum(28);
+	newStage3Sprite->Initialize();
+	stage3Sprite.reset(newStage3Sprite);
+	stage3Sprite->SetAlpha(1.0f);
+	stage3Sprite->SetScale({ 1280.0f, 720.0f });
+	stage3Sprite->SetPosition({ 0.0f, 0.0 });
+
+	//ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–
 	Camera::SetInput(input_);
 	Camera::SetDXInput(dxInput);
 	Camera* newCamera = new Camera();
@@ -71,18 +194,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	camera_->SetEye({ 0.0f,10.0f,5.0f });
 	camera_->SetTarget({ 0.0f,0.0f,0.0f });
 
-	//ƒ‰ƒCƒg(‰e)
+	//ãƒ©ã‚¤ãƒˆ(å½±)
 	Light* newLight = new Light();
 	newLight->Initialize();
 	light.reset(newLight);
 
-	//ƒ‰ƒCƒg
+	//ãƒ©ã‚¤ãƒˆ
 	LightGroup::StaticInitialize(dxCommon_->GetDevice());
 	LightGroup* newLightGroup = new LightGroup();
 	newLightGroup = LightGroup::Create();
 	lightGroup.reset(newLightGroup);
 
-	//ƒRƒ‰ƒCƒ_[‚ÌƒLƒ…[ƒu
+	//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ã‚­ãƒ¥ãƒ¼ãƒ–
 	ColliderCubeModel* newCubeModel = new ColliderCubeModel();
 	newCubeModel->CreateBuffers(dxCommon_->GetDevice());
 	colliderCubeModel.reset(newCubeModel);
@@ -92,7 +215,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	ColliderCubeObject::SetModel(colliderCubeModel.get());
 	ColliderCubeObject::CreateGraphicsPipeline();
 
-	//ƒRƒ‰ƒCƒ_[‚Ì‹…
+	//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®çƒ
 	ColliderSphereModel* newSphereModel = new ColliderSphereModel();
 	newSphereModel->CreateBuffers(dxCommon_->GetDevice());
 	colliderSphereModel.reset(newSphereModel);
@@ -102,7 +225,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	ColliderSphereObject::SetModel(colliderSphereModel.get());
 	ColliderSphereObject::CreateGraphicsPipeline();
 
-	//ƒRƒ‰ƒCƒ_[‚Ì•½–Ê
+	//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®å¹³é¢
 	ColliderPlaneModel* newPlaneModel = new ColliderPlaneModel();
 	newPlaneModel->CreateBuffers(dxCommon_->GetDevice());
 	colliderPlaneModel.reset(newPlaneModel);
@@ -112,13 +235,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	ColliderPlaneObject::SetModel(colliderPlaneModel.get());
 	ColliderPlaneObject::CreateGraphicsPipeline();
 
-	//ƒRƒ‰ƒCƒ_[ƒ}ƒl[ƒWƒƒ[
+	//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼
 	ColliderManager::SetColliderCubeModel(colliderCubeModel.get());
 	ColliderManager::SetColliderSphereModel(colliderSphereModel.get());
 	ColliderManager* newColliderManager = new ColliderManager();
 	colliderManager.reset(newColliderManager);
 
-	//’e‚¯‚éƒp[ƒeƒBƒNƒ‹
+	//å¼¾ã‘ã‚‹ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	SparkParticle::SetSpriteManager(textureManager.get());
 	SparkParticle::SetDevice(dxCommon_->GetDevice());
 	SparkParticle::SetCamera(camera_.get());
@@ -129,7 +252,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newSparkParticle->SetTextureNum(5);
 	sparkParticle.reset(newSparkParticle);
 
-	//’e‚¯‚éƒp[ƒeƒBƒNƒ‹
+	//å¼¾ã‘ã‚‹ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	SparkParticle2::SetSpriteManager(textureManager.get());
 	SparkParticle2::SetDevice(dxCommon_->GetDevice());
 	SparkParticle2::SetCamera(camera_.get());
@@ -140,7 +263,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newSparkParticle2->SetTextureNum(3);
 	sparkParticle2.reset(newSparkParticle2);
 
-	//”š”­ƒp[ƒeƒBƒNƒ‹
+	//çˆ†ç™ºãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	ExplosionParticle1::SetSpriteManager(textureManager.get());
 	ExplosionParticle1::SetDevice(dxCommon_->GetDevice());
 	ExplosionParticle1::SetCamera(camera_.get());
@@ -151,7 +274,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newExplosionParticle1->SetTextureNum(16);
 	explosionParticle1.reset(newExplosionParticle1);
 
-	//”š”­ƒp[ƒeƒBƒNƒ‹
+	//çˆ†ç™ºãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	ExplosionParticle2::SetSpriteManager(textureManager.get());
 	ExplosionParticle2::SetDevice(dxCommon_->GetDevice());
 	ExplosionParticle2::SetCamera(camera_.get());
@@ -162,7 +285,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newExplosionParticle2->SetTextureNum(16);
 	explosionParticle2.reset(newExplosionParticle2);
 
-	//ƒrƒ‹ƒ{[ƒh‚ÌƒXƒvƒ‰ƒCƒg
+	//ãƒ“ãƒ«ãƒœãƒ¼ãƒ‰ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆ
 	BillboardSpriteModel::SetDevice(dxCommon_->GetDevice());
 	BillboardSpriteModel::SetSpriteManager(textureManager.get());
 	BillboardSpriteModel* newBillboardSpriteModel = new BillboardSpriteModel();
@@ -178,11 +301,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newBillboardSprite->Initialize();
 	billboardSprite.reset(newBillboardSprite);
 
-	//ƒvƒŒƒCƒ„[‚Ì’e
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¼¾
 	PlayerBullet::SetCamera(camera_.get());
 	PlayerBullet::SetInput(input);
 	PlayerBullet* newPlayerBullet = new PlayerBullet();
-	//ƒ‚ƒfƒ‹ƒZƒbƒg
+	//ãƒ¢ãƒ‡ãƒ«ã‚»ãƒƒãƒˆ
 	for (std::unique_ptr<FbxModel>& model : models)
 	{
 		if (model->GetFileName() == "playerBullet")
@@ -193,7 +316,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newPlayerBullet->Initialize();
 	playerBullet.reset(newPlayerBullet);
 
-	//ƒvƒŒƒCƒ„[
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 	Player::SetCamera(camera_.get());
 	Player::SetInput(input);
 	/*Player::SetDXInput()*/
@@ -202,11 +325,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newPlayer->SetBullet(playerBullet.get());
 	player.reset(newPlayer);
 
-	//“G’e
+	//æ•µå¼¾
 	EnemyBullet::SetCamera(camera_.get());
 	EnemyBullet::SetInput(input);
 	EnemyBullet* newEnemyBullet = new EnemyBullet();
-	//ƒ‚ƒfƒ‹ƒZƒbƒg
+	//ãƒ¢ãƒ‡ãƒ«ã‚»ãƒƒãƒˆ
 	for (std::unique_ptr<FbxModel>& model : models)
 	{
 		if (model->GetFileName() == "playerBullet")
@@ -217,7 +340,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newEnemyBullet->Initialize();
 	enemyBullet.reset(newEnemyBullet);
 
-	//“G
+	//æ•µ
 	Enemy::SetCamera(camera_.get());
 	Enemy::SetInput(input);
 	Enemy* newEnemy = new Enemy();
@@ -225,14 +348,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newEnemy->SetBullet(enemyBullet.get());
 	enemy.reset(newEnemy);
 
-	//•½–Ê
+	//å¹³é¢
 	/*Plane::SetCamera(camera_.get());
 	Plane::SetInput(input);*/
 	/*Plane* newPlane = new Plane();
 	newPlane->Initialize();
 	plane.reset(newPlane);*/
 
-	//ƒfƒoƒCƒX‚ğƒZƒbƒg
+	//ãƒ‡ãƒã‚¤ã‚¹ã‚’ã‚»ãƒƒãƒˆ
 	FbxObject3D::SetDevice(dxCommon_->GetDevice());
 	FbxObject3D::SetCamera(camera_.get());
 	FbxObject3D::SetLight(light.get());
@@ -240,7 +363,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	FbxObject3D::CreateGraphicsPipelineLightView();
 	FbxObject3D::CreateGraphicsPipeline();
 
-	//ƒŒƒxƒ‹ƒGƒfƒBƒ^
+	//ãƒ¬ãƒ™ãƒ«ã‚¨ãƒ‡ã‚£ã‚¿
 	JSONLoader* newJsonLoader = new JSONLoader();
 	newJsonLoader->LoadFile("Resources/json/10days.json");
 	jsonLoader.reset(newJsonLoader);
@@ -248,17 +371,17 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	for (int i = 0; i < jsonLoader->GetObjectNum(); i++)
 	{
 		std::unique_ptr<FbxObject3D>newObject = std::make_unique<FbxObject3D>();
-		//ƒIƒuƒWƒFƒNƒg‰Šú‰»
+		//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆåˆæœŸåŒ–
 		newObject->Initialize();
 
-		//ƒ‚ƒfƒ‹ƒZƒbƒg
+		//ãƒ¢ãƒ‡ãƒ«ã‚»ãƒƒãƒˆ
 		for (std::unique_ptr<FbxModel>& model : models)
 		{
 			if (jsonLoader->GetFileName(i) == model->GetFileName())
 			{
 				newObject->SetModel(model.get());
 			}
-			//ƒXƒe[ƒW‚Ìê‡
+			//ã‚¹ãƒ†ãƒ¼ã‚¸ã®å ´åˆ
 			if (model->GetFileName() == "plane")
 			{
 				if (jsonLoader->GetFileName(i) == "stage1" || jsonLoader->GetFileName(i) == "stage2" ||
@@ -283,22 +406,22 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			}
 		}
 
-		//ƒIƒuƒWƒFƒNƒg‚Ì”z’u
+		//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…ç½®
 		newObject->SetObjectData(jsonLoader->GetObjectData(i));
-		//ƒRƒ‰ƒCƒ_[‚Ì”z’u
+		//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®é…ç½®
 		newObject->SetColliderData(jsonLoader->GetColliderData(i));
-		//ƒeƒNƒXƒ`ƒƒƒf[ƒ^‚ÌƒZƒbƒg
+		//ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ‡ãƒ¼ã‚¿ã®ã‚»ãƒƒãƒˆ
 		newObject->SetTextureData(jsonLoader->GetTextureData(i));
 
 		object.push_back(std::move(newObject));
 
-		//ƒvƒŒƒCƒ„[‚ÌƒIƒuƒWƒFƒNƒg‚ª‚ ‚Á‚½‚ç
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒã‚ã£ãŸã‚‰
 		if (jsonLoader->GetFileName(i) == "player")
 		{
 			player->SetObject(object.back().get());
 			/*object.pop_back();*/
 		}
-		//“G‚ÌƒIƒuƒWƒFƒNƒg‚ª‚ ‚Á‚½‚ç
+		//æ•µã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒã‚ã£ãŸã‚‰
 		if (jsonLoader->GetFileName(i) == "enemy_homingShotEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy"
 			|| jsonLoader->GetFileName(i) == "enemy_normalShotYEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
 			|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy"
@@ -307,13 +430,13 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		{
 			enemy->SetObject(object.back().get());
 		}
-		//•½–Ê‚ÌƒIƒuƒWƒFƒNƒg‚ª‚ ‚Á‚½‚ç
+		//å¹³é¢ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒã‚ã£ãŸã‚‰
 	/*	if (jsonLoader->GetFileName(i) == "plane")
 		{
 			plane->SetObject(object.back().get());
 		}*/
 
-		//ƒRƒ‰ƒCƒ_[‚ÌƒZƒbƒg
+		//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®ã‚»ãƒƒãƒˆ
 		ColliderManager::SetCollider(jsonLoader->GetColliderData(i));
 	}
 }
@@ -331,93 +454,109 @@ void GameScene::Finalize()
 
 void GameScene::Update()
 {
-	//ƒJƒƒ‰XV
+	//ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
+	SceneChange();
+
+	ImGui::Begin("scene");
+	ImGui::Text("%d", scene);
+	ImGui::End();
+
+	//ã‚«ãƒ¡ãƒ©æ›´æ–°
 	camera_->UpdatePlayer(player->GetPosition(), player->GetRotation1());
 	//camera_->DebugUpdate();
 	camera_->Update();
-	//ƒRƒ“ƒgƒ[ƒ‰[XV
+	//ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼æ›´æ–°
 	dxInput->InputProcess();
 
 	billboardSprite->SetPosition(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	billboardSprite->SetScale(XMFLOAT3(2.5f, 0.3f, 1.0f));
 	billboardSprite->Update();
 
-	/*particleObject->SetPosition(XMFLOAT3(10.0f,5.0f,0));*/
-	//ƒp[ƒeƒBƒNƒ‹
-	/*particleManager->Update();*/
-	if (input_->TriggerKey(DIK_N))
-	{
-		/*sparkParticle->Add(XMFLOAT3(0,0,0));*/
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæ›´æ–°
+	UpdateSprite();
+
+	switch (scene) {
+
+	case PLAY:
+
+		/*particleObject->SetPosition(XMFLOAT3(10.0f,5.0f,0));*/
+		//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
+		/*particleManager->Update();*/
+		if (input_->TriggerKey(DIK_N))
+		{
+			/*sparkParticle->Add(XMFLOAT3(0,0,0));*/
+		}
+		sparkParticle->Update();
+
+		if (input_->TriggerKey(DIK_N))
+		{
+			sparkParticle2->Add(XMFLOAT3(0, 3.0f, 0));
+			explosionParticle1->Add(XMFLOAT3(0, 3.0f, 0));
+			explosionParticle2->Add(XMFLOAT3(0, 3.0f, 0));
+		}
+		sparkParticle2->Update();
+		explosionParticle1->Update();
+		explosionParticle2->Update();
+
+		//ãƒ©ã‚¤ãƒˆ
+		light->SetEye(XMFLOAT3(lightPos));
+		light->SetTarget(XMFLOAT3(lightTarget));
+		light->SetDir(XMFLOAT3(lightDir));
+		light->Update();
+
+		//ãƒ©ã‚¤ãƒˆ
+		lightGroup->SetAmbientColor(XMFLOAT3(1, 1, 1));
+		lightGroup->SetDirLightActive(0, false);
+		lightGroup->SetDirLightActive(1, false);
+		lightGroup->SetDirLightActive(2, false);
+		lightGroup->Update();
+
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
+		player->Update();
+
+		//æ•µ
+		enemy->Update(player->GetPosition());
+
+		//å¹³é¢
+		/*plane->Update();*/
+
+		//ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼ã§ãƒ•ã‚¡ã‚¤ãƒ«èª­ã¿è¾¼ã¿æ›´æ–°
+		//if(input_->TriggerKey(DIK_SPACE))
+		//{
+		//	jsonLoader->LoadFile("Resources/json/demo1.json"); 
+		//	int i = 0;
+		//	for (std::unique_ptr<FbxObject3D>& object0 : object)
+		//	{
+		//		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ä»¥å¤–ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ›´æ–°
+		//		if (object0->GetFileName() != "player")
+		//		{
+		//			object0->SetPosition(jsonLoader->GetPosition(i));
+		//			object0->SetScale(jsonLoader->GetScale(i));
+		//			object0->SetRotation(jsonLoader->GetRotation(i));
+		//		}
+		//		i++;
+		//	}
+		//}
+
+		for (std::unique_ptr<FbxObject3D>& object0 : object)
+		{
+			object0->Update();
+		}
+
+		//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼æ›´æ–°
+		UpdateCollider();
+
+		break;
 	}
-	sparkParticle->Update();
 
-	if (input_->TriggerKey(DIK_N))
-	{
-		sparkParticle2->Add(XMFLOAT3(0, 3.0f, 0));
-		explosionParticle1->Add(XMFLOAT3(0, 3.0f, 0));
-		explosionParticle2->Add(XMFLOAT3(0, 3.0f, 0));
-	}
-	sparkParticle2->Update();
-	explosionParticle1->Update();
-	explosionParticle2->Update();
-
-	//ƒ‰ƒCƒg
-	light->SetEye(XMFLOAT3(lightPos));
-	light->SetTarget(XMFLOAT3(lightTarget));
-	light->SetDir(XMFLOAT3(lightDir));
-	light->Update();
-
-	//ƒ‰ƒCƒg
-	lightGroup->SetAmbientColor(XMFLOAT3(1, 1, 1));
-	lightGroup->SetDirLightActive(0, false);
-	lightGroup->SetDirLightActive(1, false);
-	lightGroup->SetDirLightActive(2, false);
-	lightGroup->Update();
-
-	//ƒvƒŒƒCƒ„[
-	player->Update();
-
-	/*DeleteEnemy1();*/
-
-	//“G
-	enemy->Update(player->GetPosition());
-
-	//•½–Ê
-	/*plane->Update();*/
-
-	//ƒXƒy[ƒXƒL[‚Åƒtƒ@ƒCƒ‹“Ç‚İ‚İXV
-	//if(input_->TriggerKey(DIK_SPACE))
-	//{
-	//	jsonLoader->LoadFile("Resources/json/demo1.json"); 
-	//	int i = 0;
-	//	for (std::unique_ptr<FbxObject3D>& object0 : object)
-	//	{
-	//		//ƒvƒŒƒCƒ„[ˆÈŠO‚ÌƒIƒuƒWƒFƒNƒgXV
-	//		if (object0->GetFileName() != "player")
-	//		{
-	//			object0->SetPosition(jsonLoader->GetPosition(i));
-	//			object0->SetScale(jsonLoader->GetScale(i));
-	//			object0->SetRotation(jsonLoader->GetRotation(i));
-	//		}
-	//		i++;
-	//	}
-	//}
-
-	for (std::unique_ptr<FbxObject3D>& object0 : object)
-	{
-		object0->Update();
-	}
-
-	//ƒRƒ‰ƒCƒ_[XV
-	UpdateCollider();
 }
 
 void GameScene::UpdateCollider()
 {
-	//–‘Oˆ—
+	//äº‹å‰å‡¦ç†
 	ColliderManager::PreUpdate();
 
-	//ƒvƒŒƒCƒ„[‚Æ•½–Ê‚Æ‚Ì”»’è
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨å¹³é¢ã¨ã®åˆ¤å®š
 	//for (std::unique_ptr<FbxObject3D>& object0 : object)
 	//{
 	//	if (object0->GetFileName() == "player")
@@ -426,7 +565,7 @@ void GameScene::UpdateCollider()
 	//		{
 	//			if (object1->GetColliderType() == "Plane")
 	//			{
-	//				//“–‚½‚Á‚Ä‚¢‚½‚ç
+	//				//å½“ãŸã£ã¦ã„ãŸã‚‰
 	//				while (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
 	//				{
 	//					player->HitPlane();
@@ -436,12 +575,12 @@ void GameScene::UpdateCollider()
 	//	}
 	//}
 
-	//ƒvƒŒƒCƒ„[‚Æ“G’e‚Æ‚Ì”»’è
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨æ•µå¼¾ã¨ã®åˆ¤å®š
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		if (object0->GetFileName() == "player")
 		{
-			//’e‚ªˆê‚ÂˆÈã‚ ‚ê‚Î
+			//å¼¾ãŒä¸€ã¤ä»¥ä¸Šã‚ã‚Œã°
 			if (enemyBullet->GetBulletNum() >= 1)
 			{
 				for (int i = 0; i < enemyBullet->GetBulletNum(); i++)
@@ -449,45 +588,51 @@ void GameScene::UpdateCollider()
 					if (ColliderManager::CheckCollider(enemyBullet->GetColliderData(i),
 						object0->GetColliderData()))
 					{
-						//ƒp[ƒeƒBƒNƒ‹
+						//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 						sparkParticle2->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
 						explosionParticle1->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
 						explosionParticle2->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
-						//’e
+						//å¼¾
 						enemyBullet->SetHitFlag(true, i);
+
+						//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¢«å¼¾å‡¦ç†
+						player->HitEnemy();
 					}
 				}
 			}
 		}
 	}
 
-	//ƒvƒŒƒCƒ„[‚Æ“G‚Æ‚Ì”»’è
-	//for (std::unique_ptr<FbxObject3D>& object0 : object)
-	//{
-	//	if (object0->GetFileName() == "player")
-	//	{
-	//		for (std::unique_ptr<FbxObject3D>& object1 : object)
-	//		{
-	//			if (object1->GetFileName() == "enemy")
-	//			{
-	//				//“–‚½‚Á‚Ä‚¢‚½‚ç
-	//				if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
-	//				{
-	//					enemy->OnCollisionToEnemy(object1->GetEnemyNum(), player->GetPosition());
-	//				}
-	//			}
-	//		}
-	//	}
-	//}
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨æ•µã¨ã®åˆ¤å®š
+
+	for (std::unique_ptr<FbxObject3D>& object0 : object)
+	{
+		if (object0->GetFileName() == "player")
+		{
+			for (std::unique_ptr<FbxObject3D>& object1 : object)
+			{
+				if (object1->GetFileName() == "enemy")
+				{
+					//å½“ãŸã£ã¦ã„ãŸã‚‰
+					if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
+					{
+						enemy->OnCollisionToEnemy(object1->GetEnemyNum(), player->GetPosition());
+						//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼è¢«å¼¾å‡¦ç†
+						player->HitEnemy();
+					}
+				}
+			}
+		}
+	}
 
 	int objectNum = 0;
 
-	//’e‚Æ“G‚Æ‚Ì”»’è
+	//å¼¾ã¨æ•µã¨ã®åˆ¤å®š
 	//for (std::unique_ptr<FbxObject3D>& object0 : object)
 	//{
 	//	if (object0->GetFileName() == "enemy")
 	//	{
-	//		//’e‚ªˆê‚ÂˆÈã‚ ‚ê‚Î
+	//		//å¼¾ãŒä¸€ã¤ä»¥ä¸Šã‚ã‚Œã°
 	//		if (playerBullet->GetBulletNum() >= 1)
 	//		{
 	//			for (int i = 0; i < playerBullet->GetBulletNum(); i++)
@@ -495,14 +640,14 @@ void GameScene::UpdateCollider()
 	//				if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
 	//					object0->GetColliderData()))
 	//				{
-	//					//ƒp[ƒeƒBƒNƒ‹
+	//					//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 	//					sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
 	//					explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
 	//					explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-	//					//’e
+	//					//å¼¾
 	//					playerBullet->SetHitFlag(true, i);
 
-	//					//“G“–‚½‚è”»’èˆ—
+	//					//æ•µå½“ãŸã‚Šåˆ¤å®šå‡¦ç†
 	//					enemy->OnCollisionToBullet(object0->GetEnemyNum());
 	//				}
 	//			}
@@ -512,8 +657,8 @@ void GameScene::UpdateCollider()
 	//	objectNum++;
 	//}
 
-	//“G‚Æ’e‚Ì“–‚½‚è”»’è
-	//’e‚ªˆê‚ÂˆÈã‚ ‚ê‚Î
+	//æ•µã¨å¼¾ã®å½“ãŸã‚Šåˆ¤å®š
+	//å¼¾ãŒä¸€ã¤ä»¥ä¸Šã‚ã‚Œã°
 	if (playerBullet->GetBulletNum() >= 1)
 	{
 		for (int i = 0; i < playerBullet->GetBulletNum(); i++)
@@ -523,13 +668,13 @@ void GameScene::UpdateCollider()
 				if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
 					enemy->GetColliderData(j)))
 				{
-					//ƒp[ƒeƒBƒNƒ‹
+					//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«
 					sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
 					explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
 					explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-					//’e
+					//å¼¾
 					playerBullet->SetHitFlag(true, i);
-					//“G“–‚½‚è”»’èˆ—
+					//æ•µå½“ãŸã‚Šåˆ¤å®šå‡¦ç†
 					enemy->OnCollisionToBullet(j);
 				}
 			}
@@ -542,14 +687,14 @@ void GameScene::UpdateCollider()
 	//	}
 	//}
 
-	//“G“¯m‚Ì”»’è
-	//ƒvƒŒƒCƒ„[‚Æ•½–Ê‚Æ‚Ì”»’è
+	//æ•µåŒå£«ã®åˆ¤å®š
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¨å¹³é¢ã¨ã®åˆ¤å®š
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		if (object0->GetFileName() == "enemy")
 		{
 
-			//€‚ñ‚Å‚¢‚½‚çœŠO
+			//æ­»ã‚“ã§ã„ãŸã‚‰é™¤å¤–
 			if (enemy->GetIsDead(object0->GetEnemyNum())) {
 				break;
 			}
@@ -559,17 +704,17 @@ void GameScene::UpdateCollider()
 				if (object1->GetFileName() == "enemy")
 				{
 
-					//€‚ñ‚Å‚¢‚½‚çœŠO
+					//æ­»ã‚“ã§ã„ãŸã‚‰é™¤å¤–
 					if (enemy->GetIsDead(object1->GetEnemyNum())) {
 						break;
 					}
 
-					//©•ª“¯m‚Æ‚à‚¤‚â‚Á‚½‘g‚İ‡‚í‚¹‚ÍœŠO
+					//è‡ªåˆ†åŒå£«ã¨ã‚‚ã†ã‚„ã£ãŸçµ„ã¿åˆã‚ã›ã¯é™¤å¤–
 					if (object0->GetEnemyNum() == object1->GetEnemyNum() || (object0->GetEnemyNum() < object1->GetEnemyNum())) {
 						break;
 					}
 
-					//“–‚½‚Á‚Ä‚¢‚½‚ç
+					//å½“ãŸã£ã¦ã„ãŸã‚‰
 					if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
 					{
 						enemy->OnCollisionToEnemy(object0->GetEnemyNum(), enemy->GetPosition((object1->GetEnemyNum())));
@@ -581,8 +726,193 @@ void GameScene::UpdateCollider()
 		}
 	}
 
-	//Œãˆ—
+	//å¾Œå‡¦ç†
 	ColliderManager::PostUpdate();
+}
+
+void GameScene::UpdateSprite()
+{
+	//ã‚·ãƒ¼ãƒ³é¸æŠ
+	if (serectScene) {
+		titleSerectButtonSprite->SetColor({ 1,1,1 });
+		stageSerectButtonSprite->SetColor({ 1,0,0 });
+	}
+	else {
+		titleSerectButtonSprite->SetColor({ 1,0,0 });
+		stageSerectButtonSprite->SetColor({ 1,1,1 });
+	}
+
+	//ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠ
+	switch (serectStage) {
+	case 0:
+		stage1Sprite->SetColor({ 1,0,0 });
+		stage2Sprite->SetColor({ 1,1,1 });
+		stage3Sprite->SetColor({ 1,1,1 });
+		break;
+
+	case 1:
+		stage1Sprite->SetColor({ 1,1,1 });
+		stage2Sprite->SetColor({ 1,0,0 });
+		stage3Sprite->SetColor({ 1,1,1 });
+		break;
+
+	case 2:
+		stage1Sprite->SetColor({ 1,1,1 });
+		stage2Sprite->SetColor({ 1,1,1 });
+		stage3Sprite->SetColor({ 1,0,0 });
+		break;
+	}
+
+	switch (scene) {
+	case TITLE:
+		titleSprite->Update();
+		break;
+	case SERECT:
+		stageSelectSprite->Update();
+		stage1Sprite->Update();
+		stage2Sprite->Update();
+		stage3Sprite->Update();
+		break;
+	case PLAY:
+		menuButtonSprite->Update();
+		break;
+	case MENU:
+		menuSprite->Update();
+		menuCloseSprite->Update();
+		titleSerectButtonSprite->Update();
+		stageSerectButtonSprite->Update();
+		break;
+	case GAMEOVER:
+		gameoverSprite->Update();
+		titleSerectButtonSprite->Update();
+		stageSerectButtonSprite->Update();
+		break;
+	case CLEAR:
+		clearSprite->Update();
+		titleSerectButtonSprite->Update();
+		stageSerectButtonSprite->Update();
+		break;
+	}
+}
+
+void GameScene::SceneChange()
+{
+	switch (scene) {
+	case TITLE:
+		//ã‚¹ãƒšãƒ¼ã‚¹ã§ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆ
+		if (input_->TriggerKey(DIK_SPACE)) {
+			scene = SERECT;
+		}
+		break;
+	case SERECT:
+		//å·¦å³ã‚­ãƒ¼ã§ã‚¹ãƒ†ãƒ¼ã‚¸ã‚»ãƒ¬ã‚¯ãƒˆã€ã‚¹ãƒšãƒ¼ã‚¹ã§æ±ºå®š
+		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
+			if (serectStage < 3) {
+				serectStage++;
+			}
+		}
+		else if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
+			if (serectStage > 0) {
+				serectStage--;
+			}
+		}
+		if (input_->TriggerKey(DIK_SPACE)) {
+			scene = PLAY;
+		}
+		break;
+	case PLAY:
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ­»äº¡ã§ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼
+		if (player->GetIsDead()) {
+			scene = GAMEOVER;
+		}
+		//ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¯ãƒªã‚¢ã§ã‚¯ãƒªã‚¢
+		else if (isClear) {
+			scene = CLEAR;
+		}
+		else if (input_->TriggerKey(DIK_M)) {
+			scene = MENU;
+		}
+
+		if (input_->TriggerKey(DIK_C)) {
+			isClear = true;
+		}
+
+		break;
+	case MENU:
+		//å·¦å³ã‚­ãƒ¼ã§ã‚·ãƒ¼ãƒ³ã‚»ãƒ¬ã‚¯ãƒˆã€ã‚¹ãƒšãƒ¼ã‚¹ã§æ±ºå®š
+		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
+			serectScene = 1;
+		}
+		else if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
+			serectScene = 0;
+		}
+
+		if (input_->TriggerKey(DIK_SPACE)) {
+
+			if (serectScene) {
+				scene = SERECT;
+			}
+			else {
+				scene = TITLE;
+			}
+
+			//è¦ç´ ãƒªã‚»ãƒƒãƒˆ
+			ResetSceneData();
+
+		}
+		//Mã‚­ãƒ¼ã§ãƒ—ãƒ¬ã‚¤ã‚·ãƒ¼ãƒ³ã«æˆ»ã‚‹
+		else if (input_->TriggerKey(DIK_M)) {
+			scene = PLAY;
+		}
+
+
+
+	case GAMEOVER:
+		//å·¦å³ã‚­ãƒ¼ã§ã‚·ãƒ¼ãƒ³ã‚»ãƒ¬ã‚¯ãƒˆã€ã‚¹ãƒšãƒ¼ã‚¹ã§æ±ºå®š
+		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
+			serectScene = 1;
+		}
+		else if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
+			serectScene = 0;
+		}
+		if (input_->TriggerKey(DIK_SPACE)) {
+
+			if (serectScene) {
+				scene = SERECT;
+			}
+			else {
+				scene = TITLE;
+			}
+
+			//è¦ç´ ãƒªã‚»ãƒƒãƒˆ
+			ResetSceneData();
+
+		}
+		break;
+
+	case CLEAR:
+		//å·¦å³ã‚­ãƒ¼ã§ã‚·ãƒ¼ãƒ³ã‚»ãƒ¬ã‚¯ãƒˆã€ã‚¹ãƒšãƒ¼ã‚¹ã§æ±ºå®š
+		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
+			serectScene = 1;
+		}
+		else if (input_->TriggerKey(DIK_LEFT) || input_->TriggerKey(DIK_A)) {
+			serectScene = 0;
+		}
+		if (input_->TriggerKey(DIK_SPACE)) {
+
+			if (serectScene) {
+				scene = SERECT;
+			}
+			else {
+				scene = TITLE;
+			}
+
+			//è¦ç´ ãƒªã‚»ãƒƒãƒˆ
+			ResetSceneData();
+		}
+		break;
+	}
+
 }
 
 void GameScene::Draw()
@@ -597,13 +927,13 @@ void GameScene::Draw()
 	ImGui::InputInt("DrawParticle", drawParticle);
 	ImGui::End();
 
-	//ƒRƒ‰ƒCƒ_[‚Ì•`‰æ
+	//ã‚³ãƒ©ã‚¤ãƒ€ãƒ¼ã®æç”»
 	if (*drawCollider == 1)DrawCollider();
-	//ƒXƒvƒ‰ƒCƒg‚Ì•`‰æ
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®æç”»
 	if (*drawSprite == 1)DrawSprite();
-	//FBX‚Ì•`‰æ
+	//FBXã®æç”»
 	if (*drawFbx == 1)DrawFBX();
-	//ƒp[ƒeƒBƒNƒ‹‚Ì•`‰æ
+	//ãƒ‘ãƒ¼ãƒ†ã‚£ã‚¯ãƒ«ã®æç”»
 	if (*drawParticle == 1)DrawParticle();
 
 	/*billboardSprite->Draw(dxCommon_->GetCommandList());*/
@@ -611,6 +941,7 @@ void GameScene::Draw()
 
 void GameScene::DrawFBXLightView()
 {
+
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		object0->DrawLightView(dxCommon_->GetCommandList());
@@ -632,7 +963,36 @@ void GameScene::DrawCollider()
 
 void GameScene::DrawSprite()
 {
-	/*enemy->DrawSprite(dxCommon_->GetCommandList());*/
+	switch (scene) {
+	case TITLE:
+		titleSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case SERECT:
+		stageSelectSprite->Draw(dxCommon_->GetCommandList());
+		stage1Sprite->Draw(dxCommon_->GetCommandList());
+		stage2Sprite->Draw(dxCommon_->GetCommandList());
+		stage3Sprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case PLAY:
+		menuButtonSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case MENU:
+		menuSprite->Draw(dxCommon_->GetCommandList());
+		menuCloseSprite->Draw(dxCommon_->GetCommandList());
+		titleSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		stageSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case GAMEOVER:
+		gameoverSprite->Draw(dxCommon_->GetCommandList());
+		titleSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		stageSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	case CLEAR:
+		clearSprite->Draw(dxCommon_->GetCommandList());
+		titleSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		stageSerectButtonSprite->Draw(dxCommon_->GetCommandList());
+		break;
+	}
 }
 
 void GameScene::DrawParticle()
@@ -643,20 +1003,14 @@ void GameScene::DrawParticle()
 	explosionParticle2->Draw(dxCommon_->GetCommandList());
 }
 
-void GameScene::DeleteEnemy1()
+
+void GameScene::ResetSceneData()
 {
-	int i = 0;
-	for (std::unique_ptr<FbxObject3D>& object0 : object)
-	{
-		if (object0->GetFileName() == "enemy")
-		{
-			if (enemy->GetIsDead(i))
-			{
-				object.erase(std::next(object.begin(), i));
-			}
-		}
-		i++;
-	}
+	isClear = false;
+	serectStage = 0;
+	serectStage = 0;
+
+	player->Reset();
 }
 
 void GameScene::SetSRV(ID3D12DescriptorHeap* SRV)
