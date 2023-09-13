@@ -6,6 +6,7 @@
 #include "string.h"
 #include "vector"
 #include "imgui.h"
+#include <iostream>
 
 GameScene::GameScene()
 {
@@ -201,12 +202,29 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newPlayer->SetBullet(playerBullet.get());
 	player.reset(newPlayer);
 
+	//敵弾
+	EnemyBullet::SetCamera(camera_.get());
+	EnemyBullet::SetInput(input);
+	EnemyBullet* newEnemyBullet = new EnemyBullet();
+	//モデルセット
+	for (std::unique_ptr<FbxModel>& model : models)
+	{
+		if (model->GetFileName() == "playerBullet")
+		{
+			newEnemyBullet->SetModel(model.get());
+		}
+	}
+	newEnemyBullet->Initialize();
+	enemyBullet.reset(newEnemyBullet);
+
 	//敵
 	Enemy::SetCamera(camera_.get());
 	Enemy::SetInput(input);
 	Enemy* newEnemy = new Enemy();
 	newEnemy->Initialize();
+	newEnemy->SetBullet(enemyBullet.get());
 	enemy.reset(newEnemy);
+	int enemyNum = 0;
 
 	//平面
 	/*Plane::SetCamera(camera_.get());
@@ -274,6 +292,10 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		if (jsonLoader->GetFileName(i) == "enemy")
 		{
 			enemy->SetObject(object.back().get());
+
+			//敵番号セット
+			object.back().get()->SetEnemyNum(enemyNum);
+			enemyNum++;
 		}
 		//平面のオブジェクトがあったら
 	/*	if (jsonLoader->GetFileName(i) == "plane")
@@ -300,14 +322,14 @@ void GameScene::Finalize()
 void GameScene::Update()
 {
 	//カメラ更新
-	camera_->UpdatePlayer(player->GetPosition(),player->GetRotation1());
+	camera_->UpdatePlayer(player->GetPosition(), player->GetRotation1());
 	//camera_->DebugUpdate();
 	camera_->Update();
 	//コントローラー更新
 	dxInput->InputProcess();
 
 	billboardSprite->SetPosition(XMFLOAT3(0.0f, 10.0f, 0.0f));
-	billboardSprite->SetScale(XMFLOAT3(2.5f,0.3f,1.0f));
+	billboardSprite->SetScale(XMFLOAT3(2.5f, 0.3f, 1.0f));
 	billboardSprite->Update();
 
 	/*particleObject->SetPosition(XMFLOAT3(10.0f,5.0f,0));*/
@@ -346,7 +368,7 @@ void GameScene::Update()
 	player->Update();
 
 	//敵
-	enemy->Update();
+	enemy->Update(player->GetPosition());
 
 	//平面
 	/*plane->Update();*/
@@ -368,6 +390,7 @@ void GameScene::Update()
 	//		i++;
 	//	}
 	//}
+
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		object0->Update();
@@ -401,20 +424,51 @@ void GameScene::UpdateCollider()
 		}
 	}
 
-	//プレイヤーと平面との判定
-	/*for (std::unique_ptr<FbxObject3D>& object0 : object)
+	//プレイヤーと敵弾との判定
+	for (std::unique_ptr<FbxObject3D>& object0 : object)
+	{
+		if (object0->GetFileName() == "player")
+		{
+			//弾が一つ以上あれば
+			if (enemyBullet->GetBulletNum() >= 1)
+			{
+				for (int i = 0; i < enemyBullet->GetBulletNum(); i++)
+				{
+					if (ColliderManager::CheckCollider(enemyBullet->GetColliderData(i),
+						object0->GetColliderData()))
+					{
+						//パーティクル
+						sparkParticle2->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
+						explosionParticle1->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
+						explosionParticle2->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
+						//弾
+						enemyBullet->SetHitFlag(true, i);
+					}
+				}
+			}
+		}
+	}
+
+	//プレイヤーと敵との判定
+	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		if (object0->GetFileName() == "player")
 		{
 			for (std::unique_ptr<FbxObject3D>& object1 : object)
 			{
-				if (object1->GetColliderType() == "Plane")
+				if (object1->GetFileName() == "enemy")
 				{
-					ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData());
+					//当たっていたら
+					if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
+					{
+						enemy->OnCollisionToEnemy(object1->GetEnemyNum(), player->GetPosition());
+					}
 				}
 			}
 		}
-	}*/
+	}
+
+	int objectNum = 0;
 
 	//弾と敵との判定
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
@@ -435,8 +489,58 @@ void GameScene::UpdateCollider()
 						explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
 						//弾
 						playerBullet->SetHitFlag(true, i);
+
+						//敵当たり判定処理
+						enemy->OnCollisionToBullet(object0->GetEnemyNum());
 					}
 				}
+			}
+		}
+
+		objectNum++;
+	}
+
+	//for (int i = 0; i < enemy->GetSize();i++) {
+	//	if (enemy->GetIsDead(i)) {
+	//		object.erase(std::next(object.begin(), objectNum));
+	//	}
+	//}
+
+	//敵同士の判定
+	//プレイヤーと平面との判定
+	for (std::unique_ptr<FbxObject3D>& object0 : object)
+	{
+		if (object0->GetFileName() == "enemy")
+		{
+
+			//死んでいたら除外
+			if (enemy->GetIsDead(object0->GetEnemyNum())) {
+				break;
+			}
+
+			for (std::unique_ptr<FbxObject3D>& object1 : object)
+			{
+				if (object1->GetFileName() == "enemy")
+				{
+
+					//死んでいたら除外
+					if (enemy->GetIsDead(object1->GetEnemyNum())) {
+						break;
+					}
+
+					//自分同士ともうやった組み合わせは除外
+					if (object0->GetEnemyNum() == object1->GetEnemyNum() || (object0->GetEnemyNum() < object1->GetEnemyNum())) {
+						break;
+					}
+
+					//当たっていたら
+					if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
+					{
+						enemy->OnCollisionToEnemy(object0->GetEnemyNum(), enemy->GetPosition((object1->GetEnemyNum())));
+						enemy->OnCollisionToEnemy(object1->GetEnemyNum(), enemy->GetPosition((object0->GetEnemyNum())));
+					}
+				}
+
 			}
 		}
 	}

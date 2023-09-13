@@ -2,6 +2,19 @@
 #include "DirectXMath.h"
 #include "FbxObject3D.h"
 #include "Sprite.h"
+#include "EnemyBullet.h"
+
+enum EnemyType {
+	MoveXEnemy,
+	MoveZEnemy,
+	MoveXZEnemy,
+	HomingMoveEnemy,
+	NormalShotXEnemy,
+	NormalShotZEnemy,
+	NormalShotXZEnemy,
+	HomingShotEnemy,
+	HomingMoveShotEnemy,
+};
 
 class Enemy
 {
@@ -23,15 +36,31 @@ public:
 	//初期化
 	void Initialize();
 	//更新
-	void Update();
+	void Update(XMFLOAT3 playerPos);
 	void UpdateObject();
 	void UpdateSprite();
 	//描画
 	void DrawSprite(ID3D12GraphicsCommandList* cmdList);
+	//描画
+	void Draw(ID3D12GraphicsCommandList* cmdList);
+	void DrawLightView(ID3D12GraphicsCommandList* cmdList);
+	void SetSRV(ID3D12DescriptorHeap* SRV);
 
 	//挙動関連
 	//挙動全般
-	void Move();
+	void TypeUpdate();
+
+	//移動種類
+	void MoveHoming(int i);
+	void MoveX(int i);
+	void MoveZ(int i);
+
+	//射撃
+	void Shot(int i,XMFLOAT3 velosity);
+	void ShotX(int i);
+	void ShotZ(int i);
+	void ShotHoming(int i);
+
 	//落下
 	void UpdateGravity();
 	//ジャンプ
@@ -43,11 +72,35 @@ public:
 	//セッター
 	void SetObject(FbxObject3D* object);
 	void HitPlane();
+	void SetTypeData(int type);
+
+	//void SetType(int num,int type) { this->type[num] = type; }
+	void SetStageMid(XMFLOAT3 stageMid) { this->stageMid = stageMid; }
+	void SetBullet(EnemyBullet* enemyBullet) { Enemy::bullet = enemyBullet; }
 
 	//ゲッター
 	XMFLOAT3 GetPosition(int num) { return position[num]; }
 	XMFLOAT3 GetRotation(int num) { return rotation[num]; }
 	XMFLOAT3 GetScale(int num) { return scale[num]; }
+	bool GetIsDead(int num) { return isDead_[num]; }
+	int GetSize(){ return object.size(); }
+
+	//当たり判定
+	//敵同士
+	void OnCollisionToEnemy(int i,XMFLOAT3 enemyPos);
+	//プレイヤーと
+	void OnCollisionToPlayer(int i,XMFLOAT3 playerPos);
+	//プレイヤーの弾と
+	void OnCollisionToBullet(int i);
+
+	void CheckIsDead();
+
+	//反射ベクトルの加算
+	void RefVec(int i, XMFLOAT3 enemyPos);
+	//反射切り替え
+	void RefMoveX(int i);
+	void RefMoveZ(int i);
+
 
 	//静的メンバ変数
 private:
@@ -73,32 +126,37 @@ public:
 	std::vector<XMFLOAT3> rotation;
 	//サイズ
 	std::vector<XMFLOAT3> scale;
+	//種類
+	std::vector<int> type_;
+	//hp
+	std::vector<int> hp_;
+	//死亡フラグ
+	std::vector<bool> isDead_;
 
+	//プレイヤーの位置
+	XMFLOAT3 playerPosition = {};
+	//ステージの中心座標
+	XMFLOAT3 stageMid = {};
+	//ステージのサイズ
+	XMFLOAT3 stageSize = {40,1,40};
+
+	//動き 0 = 左,下 1 = 右,上 
+	std::vector<bool> moveX;
+	std::vector<bool> moveZ;
+	//移動スピード
+	float enemySpeed = 0.1;
+
+	//弾
+	EnemyBullet* bullet;
+	float bulletSpeed = 0.2;
+	//射撃
+	const int ShotCoolTime = 100;
+	int shotCoolTimer = 0;
+	//射撃フラグ
+	bool isShot = false;
 
 	//当たり判定関連
 	//接地フラグ
 	bool groundFlag = false;
-
-
-	//挙動関連
-	
-	//落下
-	//落下ベクトル
-	XMFLOAT3 fallVelocity = { 0.0f,0.0f,0.0f };
-	//落下タイマー
-	float fallTimer = 0.0f;
-	//落下最大値までにかかる時間
-	float fallTime = 1.0f;
-	//1フレームあたりの落下量
-	float fallFrame = 1.0f / 60.0f;
-
-	//ジャンプ
-	float jumpHeight = 0.4;
-
-	//スピード
-	float speed = 0.15f;
-
-	//HP
-	float HP = 100;
 };
 

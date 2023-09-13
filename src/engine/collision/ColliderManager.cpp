@@ -101,6 +101,9 @@ void ColliderManager::PostUpdate()
 			colliders->colliderPlaneObject->Update();
 		}
 	}
+
+
+
 }
 
 void ColliderManager::Draw(ID3D12GraphicsCommandList* cmdList)
