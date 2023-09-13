@@ -20,6 +20,8 @@ void Enemy::Initialize()
 	for (int i = 0; i < 9; i++)
 	{
 		stageFlag[i] = false;
+		stageClearFlag[i] = false;
+		stageEnemyNum[i] = 0;
 	}
 
 	//被弾
@@ -38,6 +40,8 @@ void Enemy::Update(XMFLOAT3 playerPos)
 
 	//動き
 	TypeUpdate();
+
+	CheckDeadEnemy();
 
 	//オブジェクト更新
 	UpdateObject();
@@ -113,7 +117,7 @@ void Enemy::TypeUpdate()
 			if (!isDead_[i]) {
 				switch (type_[i]) {
 
-				//移動系
+					//移動系
 				case MoveXEnemy:
 					MoveX(i);
 					break;
@@ -131,7 +135,7 @@ void Enemy::TypeUpdate()
 					MoveHoming(i);
 					break;
 
-				//射撃系
+					//射撃系
 				case NormalShotXEnemy:
 					ShotX(i);
 					break;
@@ -149,7 +153,7 @@ void Enemy::TypeUpdate()
 					ShotHoming(i);
 					break;
 
-				//複合系
+					//複合系
 				case HomingMoveShotEnemy:
 					MoveHoming(i);
 					ShotHoming(i);
@@ -354,17 +358,18 @@ void Enemy::SetObject(FbxObject3D* object)
 	scale.emplace_back(object->GetScale());
 	enemyNum++;
 
-	if (object->GetFileName() == "enemy_homingShotEnemy")SetTypeData(HomingShotEnemy); 
+	if (object->GetFileName() == "enemy_moveXEnemy")SetTypeData(MoveXEnemy);
+	else if (object->GetFileName() == "enemy_moveZEnemy")SetTypeData(MoveZEnemy);
+	else if (object->GetFileName() == "enemy_moveXZEnemy")SetTypeData(MoveXZEnemy);
+	else if (object->GetFileName() == "enemy_homingMoveEnemy")SetTypeData(HomingMoveEnemy);
+
 	else if (object->GetFileName() == "enemy_normalShotXEnemy")SetTypeData(NormalShotXEnemy);
 	else if (object->GetFileName() == "enemy_normalShotZEnemy")SetTypeData(NormalShotZEnemy);
-	else if (object->GetFileName() == "enemy_moveXZEnemy")SetTypeData(MoveXZEnemy);
-	else if (object->GetFileName() == "enemy_homingMoveShotEnemy")SetTypeData(HomingMoveShotEnemy);
-	else if (object->GetFileName() == "enemy_homingMoveEnemy")SetTypeData(HomingMoveEnemy);
 	else if (object->GetFileName() == "enemy_normalShotXZEnemy")SetTypeData(NormalShotXZEnemy);
-	else if (object->GetFileName() == "enemy_normalShotZEnemy")SetTypeData(NormalShotZEnemy);
-	else { SetTypeData(HomingShotEnemy); }
+	else if (object->GetFileName() == "enemy_homingShotEnemy")SetTypeData(HomingShotEnemy);
+	else  if (object->GetFileName() == "enemy_homingMoveShotEnemy")SetTypeData(HomingMoveShotEnemy);
 
-	SetTypeData(HomingMoveShotEnemy);
+	//SetTypeData(HomingMoveShotEnemy);
 	SetStageNumber(object->GetPosition());
 }
 
@@ -438,21 +443,48 @@ void Enemy::SetStageNumber(XMFLOAT3 pos)
 {
 	if (pos.x >= -40 && pos.x < 40)
 	{
-		if (pos.z >= -40 && pos.z < 40)stageNember_.emplace_back(1);
-		else if (pos.z >= 40 && pos.z < 120)stageNember_.emplace_back(2);
-		else if (pos.z >= 120 && pos.z < 200)stageNember_.emplace_back(3);
+		if (pos.z >= -40 && pos.z < 40)
+		{
+			stageNember_.emplace_back(1); stageEnemyNum[0]++;
+		}
+		else if (pos.z >= 40 && pos.z < 120)
+		{
+			stageNember_.emplace_back(2); stageEnemyNum[1]++;
+		}
+		else if (pos.z >= 120 && pos.z < 200)
+		{
+			stageNember_.emplace_back(3); stageEnemyNum[2]++;
+		}
 	}
-	else if (pos.x >= 40 && pos.x < 120)
+	else if (pos.x >= -120 && pos.x < -40)
 	{
-		if (pos.z >= -40 && pos.z < 40)stageNember_.emplace_back(4);
-		else if (pos.z >= 40 && pos.z < 120)stageNember_.emplace_back(5);
-		else if (pos.z >= 120 && pos.z < 200)stageNember_.emplace_back(6);
+		if (pos.z >= -40 && pos.z < 40)
+		{
+			stageNember_.emplace_back(4); stageEnemyNum[3]++;
+		}
+		else if (pos.z >= 40 && pos.z < 120)
+		{
+			stageNember_.emplace_back(5); stageEnemyNum[4]++;
+		}
+		else if (pos.z >= 120 && pos.z < 200)
+		{
+			stageNember_.emplace_back(6); stageEnemyNum[5]++;
+		}
 	}
-	else if (pos.x >= 120 && pos.x < 200)
+	else if (pos.x >= -200 && pos.x < -120)
 	{
-		if (pos.z >= -40 && pos.z < 40)stageNember_.emplace_back(7);
-		else if (pos.z >= 40 && pos.z < 120)stageNember_.emplace_back(8);
-		else if (pos.z >= 120 && pos.z < 200)stageNember_.emplace_back(9);
+		if (pos.z >= -40 && pos.z < 40)
+		{
+			stageNember_.emplace_back(7); stageEnemyNum[6]++;
+		}
+		else if (pos.z >= 40 && pos.z < 120)
+		{
+			stageNember_.emplace_back(8); stageEnemyNum[7]++;
+		}
+		else if (pos.z >= 120 && pos.z < 200)
+		{
+			stageNember_.emplace_back(9); stageEnemyNum[8]++;
+		}
 	}
 	else { stageNember_.emplace_back(9); }
 }
@@ -498,7 +530,7 @@ void Enemy::OnCollisionToEnemy(int i, XMFLOAT3 enemyPos)
 
 		//射撃系
 	case NormalShotXEnemy:
-	
+
 		break;
 
 	case NormalShotZEnemy:
@@ -510,21 +542,21 @@ void Enemy::OnCollisionToEnemy(int i, XMFLOAT3 enemyPos)
 		break;
 
 	case HomingShotEnemy:
-	
+
 		break;
 
 		//複合系,特殊系
 	case HomingMoveShotEnemy:
-		RefVec(i,enemyPos);
+		RefVec(i, enemyPos);
 		break;
 	}
 
 }
 
-void Enemy::OnCollisionToPlayer(int i,XMFLOAT3 playerPos)
+void Enemy::OnCollisionToPlayer(int i, XMFLOAT3 playerPos)
 {
 	//敵同士と同じ挙動
-	OnCollisionToEnemy(i,playerPos);
+	OnCollisionToEnemy(i, playerPos);
 }
 
 void Enemy::OnCollisionToBullet(int i)
@@ -536,6 +568,9 @@ void Enemy::OnCollisionToBullet(int i)
 	//hp減
 	hp_[i]--;
 
+	//hp��0�ȉ��Ȃ玀�S
+	if (hp_[i] <= 0 && isDead_[i] == false) {
+		stageEnemyNum[stageNember_[i]] -= 1;
 	//hpが0以下なら死亡
 	if (hp_[i] <= 0) {
 		isDead_[i] = true;
@@ -606,12 +641,12 @@ void Enemy::DeleteEnemy()
 
 void Enemy::CheckDeadEnemy()
 {
-	/*for (int i = 0; i < enemyNum; i++)
+	for (int i = 0; i < 9; i++)
 	{
-		if (isDead_[i] == true)
+		if (stageEnemyNum[i] <= 1)
 		{
-			
+			stageClearFlag[i] = true;
 		}
-	}*/
+	}
 }
 

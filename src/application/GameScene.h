@@ -63,6 +63,8 @@ public:
 	void DrawSprite();
 	void DrawParticle();
 
+	void ChangeStage();
+
 
 	//敵のオブジェクト削除
 	void DeleteEnemy1();
@@ -144,6 +146,9 @@ private:
 
 	//平面
 	/*std::unique_ptr<Plane> plane;*/
+
+	//スカイドーム
+	std::unique_ptr<FbxObject3D> skydome;
 
 	//コライダーのモデル
 	std::unique_ptr<ColliderCubeModel>colliderCubeModel;

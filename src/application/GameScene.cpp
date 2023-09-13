@@ -33,11 +33,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	newTextureManager->LoadFile(5, L"Resources/pictures/effect1.png");
 	newTextureManager->LoadFile(6, L"Resources/pictures/effect2.png");
 	newTextureManager->LoadFile(7, L"Resources/pictures/effect3.png");
-	newTextureManager->LoadFile(8, L"Resources/pictures/enemyHP.png");
+	newTextureManager->LoadFile(8, L"Resources/pictures/white1x1.png");
 	newTextureManager->LoadFile(9, L"Resources/pictures/toriko.png");
 	newTextureManager->LoadFile(10, L"Resources/pictures/grassFiled.png");
 	newTextureManager->LoadFile(11, L"Resources/pictures/gravel.png");
-	newTextureManager->LoadFile(12, L"Resources/pictures/DissolveMap.png");
+	newTextureManager->LoadFile(12, L"Resources/pictures/white1x1.png");
 	newTextureManager->LoadFile(13, L"Resources/pictures/mapping.png");
 	newTextureManager->LoadFile(14, L"Resources/pictures/black.png");
 	newTextureManager->LoadFile(15, L"Resources/pictures/blackParticle.png");
@@ -67,9 +67,11 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//モデル名を指定してファイル読み込み
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("plane"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("player"));
-	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("enemy"));
+	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("moveEnemy"));
+	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("stopEnemy"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("sphere"));
+	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("skydome"));
 
 	//スプライト
 	Sprite::SetDevice(dxCommon->GetDevice());
@@ -395,14 +397,31 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			}
 			if (model->GetFileName() == "player")
 			{
-				if (jsonLoader->GetFileName(i) == "enemy_homingShotEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy"
-					|| jsonLoader->GetFileName(i) == "enemy_normalShotYEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
-					|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy"
-					|| jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy"
-					|| jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy")
+				if (jsonLoader->GetFileName(i) == "player")
 				{
 					newObject->SetModel(model.get());
 				}
+			}
+
+			//敵なら
+
+			if (model->GetFileName() == "moveEnemy")
+			{
+				if (jsonLoader->GetFileName(i) == "enemy_moveXEnemy" || jsonLoader->GetFileName(i) == "enemy_moveZEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy")
+				{
+					newObject->SetModel(model.get());
+				}
+			}
+			if (model->GetFileName() == "stopEnemy")
+			{
+				if (jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingShotEnemy")
+				{
+					newObject->SetModel(model.get());
+				}
+
 			}
 		}
 
@@ -422,24 +441,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			/*object.pop_back();*/
 		}
 		//敵のオブジェクトがあったら
-		if (jsonLoader->GetFileName(i) == "enemy_homingShotEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy"
-			|| jsonLoader->GetFileName(i) == "enemy_normalShotYEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
-			|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy"
-			|| jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy"
-			|| jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy")
+		if (jsonLoader->GetFileName(i) == "enemy_moveXEnemy" || jsonLoader->GetFileName(i) == "enemy_moveZEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingShotEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy")
 		{
 			enemy->SetObject(object.back().get());
 		}
-		//平面のオブジェクトがあったら
-	/*	if (jsonLoader->GetFileName(i) == "plane")
-		{
-			plane->SetObject(object.back().get());
-		}*/
 
 		//コライダーのセット
 		ColliderManager::SetCollider(jsonLoader->GetColliderData(i));
 	}
-
 
 	//オーディオ初期化
 	SoundManager::StaticInitialize();
@@ -453,6 +466,24 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//クリア音
 	clearSE = new SoundManager();
 	clearSE->SoundLoadWave("Resources/Audio/clearSE.wav");
+	//スカイドーム
+	FbxObject3D* newSkydome = new FbxObject3D;
+	newSkydome->Initialize();
+	//オブジェクトの配置
+	newSkydome->SetPosition({ 0,0,0 });
+	newSkydome->SetScale({ 1000,1000,1000 });
+	newSkydome->SetRotation({ 0,0,0 });
+	//テクスチャデータのセット
+	newSkydome->SetTextureNum(0);
+	//モデルデータのセット
+	for (std::unique_ptr<FbxModel>& model : models)
+	{
+		if (model->GetFileName() == "skydome")
+		{
+			newSkydome->SetModel(model.get());
+		}
+	}
+	skydome.reset(newSkydome);
 
 }
 
@@ -483,6 +514,9 @@ void GameScene::Update()
 	//コントローラー更新
 	dxInput->InputProcess();
 
+	//スカイドーム更新
+	skydome->Update();
+
 	billboardSprite->SetPosition(XMFLOAT3(0.0f, 10.0f, 0.0f));
 	billboardSprite->SetScale(XMFLOAT3(2.5f, 0.3f, 1.0f));
 	billboardSprite->Update();
@@ -497,21 +531,14 @@ void GameScene::Update()
 
 	case PLAY:
 
+	/*DeleteEnemy1();*/
+
+	enemy->SetStageNum(stageNum);
+	enemy->Update(player->GetPosition());
 		/*particleObject->SetPosition(XMFLOAT3(10.0f,5.0f,0));*/
 		//パーティクル
 		/*particleManager->Update();*/
-		if (input_->TriggerKey(DIK_N))
-		{
-			/*sparkParticle->Add(XMFLOAT3(0,0,0));*/
-		}
 		sparkParticle->Update();
-
-		if (input_->TriggerKey(DIK_N))
-		{
-			sparkParticle2->Add(XMFLOAT3(0, 3.0f, 0));
-			explosionParticle1->Add(XMFLOAT3(0, 3.0f, 0));
-			explosionParticle2->Add(XMFLOAT3(0, 3.0f, 0));
-		}
 		sparkParticle2->Update();
 		explosionParticle1->Update();
 		explosionParticle2->Update();
@@ -567,6 +594,9 @@ void GameScene::Update()
 		break;
 	}
 
+	ChangeStage();
+
+	UpdateCollider();
 }
 
 void GameScene::UpdateCollider()
@@ -685,35 +715,35 @@ void GameScene::UpdateCollider()
 	//敵と弾の当たり判定
 
 		//弾が一つ以上あれば
-		if (playerBullet->GetBulletNum() >= 1)
+	if (playerBullet->GetBulletNum() >= 1)
+	{
+		for (int i = 0; i < playerBullet->GetBulletNum(); i++)
 		{
-			for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+			for (int j = 0; j < enemy->GetEnemyNum(); j++)
 			{
-				for (int j = 0; j < enemy->GetEnemyNum(); j++)
-				{
-					if (!enemy->GetIsDead(enemyNum)) {
-						for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+				if (!enemy->GetIsDead(enemyNum)) {
+					for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+					{
+						if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
+							enemy->GetColliderData(j)))
 						{
-							if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
-								enemy->GetColliderData(j)))
-							{
-								//パーティクル
-								sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-								explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-								explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-								//弾
-								playerBullet->SetHitFlag(true, i);
+							//パーティクル
+							sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+							explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+							explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+							//弾
+							playerBullet->SetHitFlag(true, i);
 
-								//敵当たり判定処理
-								enemy->OnCollisionToBullet(j);
-							}
+							//敵当たり判定処理
+							enemy->OnCollisionToBullet(j);
 						}
 					}
 				}
-				enemyNum++;
 			}
+			enemyNum++;
 		}
-	
+	}
+
 
 	//for (int i = 0; i < enemy->GetSize();i++) {
 	//	if (enemy->GetIsDead(i)) {
@@ -843,7 +873,7 @@ void GameScene::SceneChange()
 	case SERECT:
 		//左右キーでステージセレクト、スペースで決定
 		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
-			if (serectStage < 3) {
+			if (serectStage < 2) {
 				serectStage++;
 			}
 		}
@@ -990,6 +1020,7 @@ void GameScene::DrawFBXLightView()
 	enemy->DrawLightView(dxCommon_->GetCommandList());
 	player->DrawLightView(dxCommon_->GetCommandList());
 
+	skydome->DrawLightView(dxCommon_->GetCommandList());
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		object0->DrawLightView(dxCommon_->GetCommandList());
@@ -998,13 +1029,69 @@ void GameScene::DrawFBXLightView()
 
 void GameScene::DrawFBX()
 {
-	enemy->Draw(dxCommon_->GetCommandList());
-	player->Draw(dxCommon_->GetCommandList());
+	int i = 0;
+
+	skydome->Draw(dxCommon_->GetCommandList());
 
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
-		object0->Draw(dxCommon_->GetCommandList());
+		if (object0->GetFileName() == "enemy_homingShotEnemy" || object0->GetFileName() == "enemy_normalShotXEnemy"
+			|| object0->GetFileName() == "enemy_normalShotYEnemy" || object0->GetFileName() == "enemy_normalShotZEnemy"
+			|| object0->GetFileName() == "enemy_moveXZEnemy" || object0->GetFileName() == "enemy_homingMoveShotEnemy"
+			|| object0->GetFileName() == "enemy_homingMoveEnemy" || object0->GetFileName() == "enemy_normalShotXZEnemy"
+			|| object0->GetFileName() == "enemy_normalShotZEnemy")
+		{
+			//���݂̃X�e�[�W�ƈ�v������
+			if (enemy->GetEnemyStageNum(i) == stageNum)
+			{
+				object0->Draw(dxCommon_->GetCommandList());
+			}
+			i++;
+		}
+		else if (object0->GetFileName() == "stage1")
+		{
+			if (stageNum == 1 || enemy->GetStageClearFlag(1))object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage2")
+		{
+			if (stageNum == 2 || enemy->GetStageClearFlag(1))object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage3")
+		{
+			if (stageNum == 3 || enemy->GetStageClearFlag(2))object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage4")
+		{
+			if (stageNum == 4 || enemy->GetStageClearFlag(1))object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage5")
+		{
+			if (stageNum == 5 || enemy->GetStageClearFlag(2) || enemy->GetStageClearFlag(4))object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage6")
+		{
+			if (stageNum == 6 || enemy->GetStageClearFlag(3) || enemy->GetStageClearFlag(5))object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage7")
+		{
+			if (stageNum == 7 || enemy->GetStageClearFlag(4))object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage8")
+		{
+			if (stageNum == 8 || enemy->GetStageClearFlag(5) || enemy->GetStageClearFlag(7))object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage9")
+		{
+			if (stageNum == 9 || enemy->GetStageClearFlag(6) || enemy->GetStageClearFlag(8))object0->Draw(dxCommon_->GetCommandList());
+		}
+		else
+		{
+			object0->Draw(dxCommon_->GetCommandList());
+		}
 	}
+	enemy->Draw(dxCommon_->GetCommandList());
+	player->Draw(dxCommon_->GetCommandList());
+
 }
 
 void GameScene::DrawCollider()
@@ -1054,6 +1141,96 @@ void GameScene::DrawParticle()
 	explosionParticle2->Draw(dxCommon_->GetCommandList());
 }
 
+void GameScene::ChangeStage()
+{
+	//�X�e�[�W1�N���A
+	if (enemy->GetStageClearFlag(1))
+	{
+		if (player->GetPosition().x <= -60 && player->GetPosition().x >= -100
+			&& player->GetPosition().z <= 20 && player->GetPosition().z >= -20)
+		{
+			stageNum = 4;
+		}
+		else if (player->GetPosition().x <= 20 && player->GetPosition().x >= -20
+			&& player->GetPosition().z <= 100 && player->GetPosition().z >= 60)
+		{
+			stageNum = 2;
+		}
+	}
+	if (enemy->GetStageClearFlag(2))
+	{
+		if (player->GetPosition().x <= -60 && player->GetPosition().x >= -100
+			&& player->GetPosition().z <= 100 && player->GetPosition().z >= 60)
+		{
+			stageNum = 5;
+		}
+		else if (player->GetPosition().x <= 20 && player->GetPosition().x >= -20
+			&& player->GetPosition().z <= 180 && player->GetPosition().z >= 140)
+		{
+			stageNum = 3;
+		}
+	}
+	if (enemy->GetStageClearFlag(3))
+	{
+		if (player->GetPosition().x <= -60 && player->GetPosition().x >= -100
+			&& player->GetPosition().z <= 180 && player->GetPosition().z >= 140)
+		{
+			stageNum = 6;
+		}
+	}
+	if (enemy->GetStageClearFlag(4))
+	{
+		if (player->GetPosition().x <= -60 && player->GetPosition().x >= -100
+			&& player->GetPosition().z <= 100 && player->GetPosition().z >= 60)
+		{
+			stageNum = 5;
+		}
+		if (player->GetPosition().x <= -140 && player->GetPosition().x >= -180
+			&& player->GetPosition().z <= 20 && player->GetPosition().z >= -20)
+		{
+			stageNum = 7;
+		}
+	}
+	if (enemy->GetStageClearFlag(5))
+	{
+		if (player->GetPosition().x <= -60 && player->GetPosition().x >= -100
+			&& player->GetPosition().z <= 180 && player->GetPosition().z >= 140)
+		{
+			stageNum = 6;
+		}
+		if (player->GetPosition().x <= -140 && player->GetPosition().x >= -180
+			&& player->GetPosition().z <= 100 && player->GetPosition().z >= 60)
+		{
+			stageNum = 8;
+		}
+	}
+	if (enemy->GetStageClearFlag(6))
+	{
+		if (player->GetPosition().x <= -140 && player->GetPosition().x >= -180
+			&& player->GetPosition().z <= 180 && player->GetPosition().z >= 140)
+		{
+			stageNum = 9;
+		}
+	}
+	if (enemy->GetStageClearFlag(7))
+	{
+		if (player->GetPosition().x <= -140 && player->GetPosition().x >= -180
+			&& player->GetPosition().z <= 100 && player->GetPosition().z >= 60)
+		{
+			stageNum = 8;
+		}
+	}
+	if (enemy->GetStageClearFlag(8))
+	{
+		if (player->GetPosition().x <= -140 && player->GetPosition().x >= -180
+			&& player->GetPosition().z <= 180 && player->GetPosition().z >= 140)
+		{
+			stageNum = 9;
+		}
+	}
+}
+
+void GameScene::DeleteEnemy1()
 
 void GameScene::ResetSceneData()
 {
@@ -1068,6 +1245,8 @@ void GameScene::SetSRV(ID3D12DescriptorHeap* SRV)
 {
 	player->SetSRV(SRV);
 	enemy->SetSRV(SRV);
+
+	skydome->SetSRV(SRV);
 
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
