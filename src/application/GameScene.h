@@ -144,6 +144,9 @@ private:
 	//平面
 	/*std::unique_ptr<Plane> plane;*/
 
+	//スカイドーム
+	std::unique_ptr<FbxObject3D> skydome;
+
 	//コライダーのモデル
 	std::unique_ptr<ColliderCubeModel>colliderCubeModel;
 	std::unique_ptr<ColliderSphereModel>colliderSphereModel;
