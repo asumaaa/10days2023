@@ -619,9 +619,62 @@ void GameScene::DrawFBXLightView()
 
 void GameScene::DrawFBX()
 {
+	int i = 0;
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
-		object0->Draw(dxCommon_->GetCommandList());
+		if (object0->GetFileName() == "enemy_homingShotEnemy" || object0->GetFileName() == "enemy_normalShotXEnemy"
+			|| object0->GetFileName() == "enemy_normalShotYEnemy" || object0->GetFileName() == "enemy_normalShotZEnemy"
+			|| object0->GetFileName() == "enemy_moveXZEnemy" || object0->GetFileName() == "enemy_homingMoveShotEnemy"
+			|| object0->GetFileName() == "enemy_homingMoveEnemy" || object0->GetFileName() == "enemy_normalShotXZEnemy"
+			|| object0->GetFileName() == "enemy_normalShotZEnemy")
+		{
+			//現在のステージと一致したら
+			if (enemy->GetEnemyStageNum(i) == stageNum)
+			{
+				object0->Draw(dxCommon_->GetCommandList());
+			}
+			i++;
+		}
+		else if (object0->GetFileName() == "stage1")
+		{
+			if (stageNum == 1)object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage2")
+		{
+			if (stageNum == 2)object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage3")
+		{
+			if (stageNum == 3)object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage4")
+		{
+			if (stageNum == 4)object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage5")
+		{
+			if (stageNum == 5)object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage6")
+		{
+			if (stageNum == 6)object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage7")
+		{
+			if (stageNum == 7)object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage8")
+		{
+			if (stageNum == 8)object0->Draw(dxCommon_->GetCommandList());
+		}
+		else if (object0->GetFileName() == "stage9")
+		{
+			if (stageNum == 9)object0->Draw(dxCommon_->GetCommandList());
+		}
+		else
+		{
+			object0->Draw(dxCommon_->GetCommandList());
+		}
 	}
 }
 

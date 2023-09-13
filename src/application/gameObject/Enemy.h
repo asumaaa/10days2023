@@ -89,6 +89,7 @@ public:
 	//コライダーデータ
 	JSONLoader::ColliderData GetColliderData(int num);
 	int GetEnemyNum() { return enemyNum; };
+	int GetEnemyStageNum(int num) { return stageNember_[num]; }
 
 	//当たり判定
 	//敵同士
