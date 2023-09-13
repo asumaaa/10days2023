@@ -270,7 +270,7 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 					newObject->SetModel(model.get());
 				}
 			}
-			if (model->GetFileName() == "enemy")
+			if (model->GetFileName() == "player")
 			{
 				if (jsonLoader->GetFileName(i) == "enemy_homingShotEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy"
 					|| jsonLoader->GetFileName(i) == "enemy_normalShotYEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"

@@ -147,4 +147,7 @@ private:
 	//ビルボード　
 	std::unique_ptr<BillboardSprite>billboardSprite;
 	std::unique_ptr<BillboardSpriteModel>billboardSpriteModel;
+
+	//現在のステージ
+	int stageNum = 1;
 };
