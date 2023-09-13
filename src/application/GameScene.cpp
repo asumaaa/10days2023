@@ -454,6 +454,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 		ColliderManager::SetCollider(jsonLoader->GetColliderData(i));
 	}
 
+	//オーディオ初期化
+	SoundManager::StaticInitialize();
+	//音
+	//プレイ音楽
+	playBGM = new SoundManager();
+	playBGM->SoundLoadWave("Resources/Audio/playBGM.wav");
+	//選択
+	pickSE = new SoundManager();
+	pickSE->SoundLoadWave("Resources/Audio/pickSE.wav");
+	//クリア音
+	clearSE = new SoundManager();
+	clearSE->SoundLoadWave("Resources/Audio/clearSE.wav");
 	//スカイドーム
 	FbxObject3D* newSkydome = new FbxObject3D;
 	newSkydome->Initialize();
@@ -511,6 +523,9 @@ void GameScene::Update()
 
 	//スプライト更新
 	UpdateSprite();
+
+	//BGM流す
+	playBGM->SoundPlayWave(true, playBGMVolume);
 
 	switch (scene) {
 
@@ -850,6 +865,8 @@ void GameScene::SceneChange()
 	case TITLE:
 		//スペースでステージセレクト
 		if (input_->TriggerKey(DIK_SPACE)) {
+			pickSE->StopWave();
+			pickSE->SoundPlayWave(false, pickSEVolume);
 			scene = SERECT;
 		}
 		break;
@@ -867,6 +884,8 @@ void GameScene::SceneChange()
 		}
 		if (input_->TriggerKey(DIK_SPACE)) {
 			scene = PLAY;
+			pickSE->StopWave();
+			pickSE->SoundPlayWave(false, pickSEVolume);
 		}
 		break;
 	case PLAY:
@@ -876,10 +895,14 @@ void GameScene::SceneChange()
 		}
 		//ステージクリアでクリア
 		else if (isClear) {
+			clearSE->StopWave();
+			clearSE->SoundPlayWave(false, clearSEVolume);
 			scene = CLEAR;
 		}
 		else if (input_->TriggerKey(DIK_M)) {
 			scene = MENU;
+			pickSE->StopWave();
+			pickSE->SoundPlayWave(false, pickSEVolume);
 		}
 
 		if (input_->TriggerKey(DIK_C)) {
@@ -900,9 +923,13 @@ void GameScene::SceneChange()
 
 			if (serectScene) {
 				scene = SERECT;
+				pickSE->StopWave();
+				pickSE->SoundPlayWave(false, pickSEVolume);
 			}
 			else {
 				scene = TITLE;
+				pickSE->StopWave();
+				pickSE->SoundPlayWave(false, pickSEVolume);
 			}
 
 			//要素リセット

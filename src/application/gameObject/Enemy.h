@@ -3,6 +3,7 @@
 #include "FbxObject3D.h"
 #include "Sprite.h"
 #include "EnemyBullet.h"
+#include"SoundManager.h"
 
 enum EnemyType {
 	MoveXEnemy,
@@ -187,5 +188,9 @@ public:
 	int stageEnemyNum[9];
 	//現在のステージ
 	int stageNum = 1;
+
+	//被弾音
+	SoundManager* damageSE;
+	float damageSEVolume = 0.2f;
 };
 

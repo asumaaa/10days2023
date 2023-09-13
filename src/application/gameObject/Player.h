@@ -2,6 +2,7 @@
 #include "DirectXMath.h"
 #include "FbxObject3D.h"
 #include "PlayerBullet.h"
+#include"SoundManager.h"
 
 class Player
 {
@@ -132,5 +133,13 @@ public:
 	//スピード
 	float posSpeed = 0.15f;
 	float rotSpeed = (float)PI * 1.0f / 180.0f;
+
+	//射撃音
+	SoundManager* shotSE;
+	float shotSEVolume = 0.1f;
+
+	//被弾音
+	SoundManager* damageSE;
+	float damageSEVolume = 0.2f;
 };
 

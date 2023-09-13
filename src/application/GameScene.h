@@ -28,6 +28,7 @@
 #include "ExplosionParticle2.h"
 #include "BillboardSprite.h"
 #include "BillboardSpriteModel.h"
+#include"SoundManager.h"
 
 enum Scene {
 	TITLE,
@@ -194,4 +195,16 @@ private:
 	std::unique_ptr<Sprite> stage1Sprite;
 	std::unique_ptr<Sprite> stage2Sprite;
 	std::unique_ptr<Sprite> stage3Sprite;
+
+	//BGM
+	SoundManager* playBGM;
+	float playBGMVolume = 0.4f;
+
+	//決定音
+	SoundManager* pickSE;
+	float pickSEVolume = 1.0f;
+
+	//クリア音
+	SoundManager* clearSE;
+	float clearSEVolume = 0.4f;
 };

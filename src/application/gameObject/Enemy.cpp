@@ -23,6 +23,11 @@ void Enemy::Initialize()
 		stageClearFlag[i] = false;
 		stageEnemyNum[i] = 0;
 	}
+
+	//被弾
+	damageSE = new SoundManager();
+	damageSE->SoundLoadWave("Resources/Audio/damageSE.wav");
+
 }
 
 void Enemy::Update(XMFLOAT3 playerPos)
@@ -556,6 +561,10 @@ void Enemy::OnCollisionToPlayer(int i, XMFLOAT3 playerPos)
 
 void Enemy::OnCollisionToBullet(int i)
 {
+
+	damageSE->StopWave();
+	damageSE->SoundPlayWave(false, damageSEVolume);
+
 	//hp減
 	hp_[i]--;
 
