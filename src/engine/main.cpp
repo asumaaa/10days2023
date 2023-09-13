@@ -148,6 +148,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	
 		gameScene->Draw();
 
+		gameScene->DrawSprite();
+
+
 		//ImGui
 		//ImGui::Begin("blur");
 		//ImGui::SetWindowPos(ImVec2(0, 0));

@@ -44,15 +44,15 @@ class GameScene
 public:
 	GameScene();
 	~GameScene();
-	//初期匁E
+	//初期化
 	void Initialize(DirectXCommon* dxCommon, Input* input);
-	//終亁E��
+	//終了時
 	void Finalize();
 	//更新
 	void Update();
 	void UpdateCollider();
 	void UpdateSprite();
-	//シーン刁E��替ぁE
+	//シーン切り替え
 	void SceneChange();
 	//描画
 	void Draw();
@@ -76,17 +76,17 @@ public:
 	void DeleteEnemy8();
 	void DeleteEnemy9();
   
-	//シーン変更でのリセチE��
+	//シーン変更でのリセット
 	void ResetSceneData();
 
-	//セチE��ー
+	//セッター
 	void SetSRV(ID3D12DescriptorHeap* SRV);
-	//ゲチE��ー
+	//ゲッター
 	DirectX::XMMATRIX GetLightViewProjection();
 
 	//メンバ変数
 private:
-	//チE��イスとinput
+	//デバイスとinput
 	DirectXCommon* dxCommon_ = nullptr;
 	Input* input_ = nullptr;
 	DXInput* dxInput = new DXInput();
@@ -96,9 +96,9 @@ private:
 	//シーン
 	int scene = TITLE;
 	//選択中のボタン
-	//0:タイトル	1:スチE�EジセレクチE
+	//0:タイトル	1:ステージセレクト
 	int serectScene = 0;
-	//0:スチE�Eジ1	1:スチE�Eジ2		2:スチE�Eジ3
+	//0:ステージ1	1:ステージ2		2:ステージ3
 	int serectStage = 0;
 	//クリアフラグ
 	bool isClear = false;
@@ -106,13 +106,13 @@ private:
 	//fbx
 	std::list<std::unique_ptr<FbxModel>> models;
 
-	//レベルエチE��タ
+	//レベルエディタ
 	std::unique_ptr<JSONLoader> jsonLoader;
 
-	//オブジェクチE
+	//オブジェクト
 	std::list<std::unique_ptr<FbxObject3D>> object;
 
-	//ライチE影用
+	//ライト 影用
 	std::unique_ptr<Light> light;
 	float lightDir[3] = { 0.0f,-1.0f , -1.0f };
 	float lightPos[3] = { 0.0f,25.0f,25.0f };
@@ -120,14 +120,14 @@ private:
 	float lightFactorAngle[2] = { 20.0f,30.0f, };
 	float lightAtten[3] = { 0.0f,0.0f,0.0f };
 
-	//ライチE
+	//ライト
 	std::unique_ptr<LightGroup> lightGroup;
 	float lightManagerDir[3] = { 0.0f,-1.0f , 1.0f };
 
-	//チE��スチャマネージャー
+	//テクスチャマネージャー
 	std::unique_ptr <TextureManager> textureManager;
 
-	//変形行�E
+	//変形行列
 	DirectX::XMFLOAT3 position = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3 rotation0 = { 0.0f,0.0f,0.0f };
 	DirectX::XMFLOAT3 scale = { 0.010f,0.010f,0.010f };
@@ -146,7 +146,10 @@ private:
 	//平面
 	/*std::unique_ptr<Plane> plane;*/
 
-	//コライダーのモチE��
+	//スカイドーム
+	std::unique_ptr<FbxObject3D> skydome;
+
+	//コライダーのモデル
 	std::unique_ptr<ColliderCubeModel>colliderCubeModel;
 	std::unique_ptr<ColliderSphereModel>colliderSphereModel;
 	std::unique_ptr<ColliderPlaneModel>colliderPlaneModel;
@@ -154,16 +157,16 @@ private:
 	//コライダー
 	std::unique_ptr<ColliderManager> colliderManager;
 
-	//弾けるパ�EチE��クル
+	//弾けるパーティクル
 	std::unique_ptr<SparkParticle>sparkParticle;
 
-	//弾けるパ�EチE��クル2
+	//弾けるパーティクル2
 	std::unique_ptr<SparkParticle2>sparkParticle2;
 
-	//爁E��パ�EチE��クル1
+	//爆発パーテイクル1
 	std::unique_ptr<ExplosionParticle1>explosionParticle1;
 
-	//爁E��パ�EチE��クル2
+	//爆発パーテイクル2
 	std::unique_ptr<ExplosionParticle2>explosionParticle2;
 
 	//描画フラグ
@@ -172,13 +175,12 @@ private:
 	int drawSprite[1] = { 0 };
 	int drawCollider[1] = { 1 };
 
-	//ビルボ�Eド　
+	int stageNum = 1;
+	//ビルボード　
 	std::unique_ptr<BillboardSprite>billboardSprite;
 	std::unique_ptr<BillboardSpriteModel>billboardSpriteModel;
 
-	//���݂̃X�e�[�W
-	int stageNum = 1;
-	//画僁E
+	//画像
 	std::unique_ptr<Sprite> titleSprite;
 	std::unique_ptr<Sprite> gameoverSprite;
 	std::unique_ptr<Sprite> clearSprite;

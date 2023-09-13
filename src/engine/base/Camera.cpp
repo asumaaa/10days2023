@@ -37,6 +37,7 @@ void Camera::Update()
 {
 	BillboardUpdate();
 	matView_ = XMMatrixLookAtLH(XMLoadFloat3(&eye_), XMLoadFloat3(&target_), XMLoadFloat3(&up_));
+
 }
 
 void Camera::BillboardUpdate()
