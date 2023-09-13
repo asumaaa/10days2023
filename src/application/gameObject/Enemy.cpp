@@ -562,6 +562,7 @@ void Enemy::OnCollisionToBullet(int i)
 	//hp��0�ȉ��Ȃ玀�S
 	if (hp_[i] <= 0 && isDead_[i] == false) {
 		stageEnemyNum[stageNember_[i]] -= 1;
+	}
 	//hpが0以下なら死亡
 	if (hp_[i] <= 0) {
 		isDead_[i] = true;
@@ -634,9 +635,19 @@ void Enemy::CheckDeadEnemy()
 {
 	for (int i = 0; i < 9; i++)
 	{
-		if (stageEnemyNum[i] <= 1)
+		if (i == 1)
 		{
-			stageClearFlag[i] = true;
+			if (stageEnemyNum[i] <= 1)
+			{
+				stageClearFlag[i] = true;
+			}
+		}
+		else
+		{
+			if (stageEnemyNum[i] <= 0)
+			{
+				stageClearFlag[i] = true;
+			}
 		}
 	}
 }

@@ -49,6 +49,8 @@ public:
 	void SetSRV(ID3D12DescriptorHeap* SRV);
 	void SetStageMid(XMFLOAT3 stageMid) { this->stageMid = stageMid; }
 
+	void SetFreeMove(bool isFreeMove) { this->freeMove = isFreeMove; }
+
 	//“–‚½‚è”»’è
 	void HitPlane();
 	void HitEnemy();
@@ -114,6 +116,9 @@ public:
 	//–³“GŽžŠÔ
 	const int InvTime = 10;
 	int invTimer = 0;
+
+	//Ž©—RˆÚ“®
+	bool freeMove = true;
 
 	//‹““®ŠÖ˜A
 	//—Ž‰º

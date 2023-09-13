@@ -1203,8 +1203,6 @@ void GameScene::ChangeStage()
 	}
 }
 
-void GameScene::DeleteEnemy1()
-
 void GameScene::ResetSceneData()
 {
 	isClear = false;

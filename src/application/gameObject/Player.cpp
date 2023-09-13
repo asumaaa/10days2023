@@ -123,10 +123,6 @@ void Player::KeyControl()
 		}
 	}
 
-	if (isAdd) {
-		position.x += posVelocity.x;
-	}
-
 	//進行ベクトルを加算(Z)、範囲外に行くなら加算しない
 	float stageUp = stageMid.z + (stageSize.z);
 	float stageDown = stageMid.z - (stageSize.z);
@@ -152,7 +148,8 @@ void Player::KeyControl()
 		}
 	}
 
-	if (isAdd) {
+	if (isAdd || freeMove) {
+		position.x += posVelocity.x;
 		position.z += posVelocity.z;
 	}
 
