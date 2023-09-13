@@ -631,9 +631,19 @@ void Enemy::CheckDeadEnemy()
 {
 	for (int i = 0; i < 9; i++)
 	{
-		if (stageEnemyNum[i] <= 1)
+		if (i == 1)
 		{
-			stageClearFlag[i] = true;
+			if (stageEnemyNum[i] <= 1)
+			{
+				stageClearFlag[i] = true;
+			}
+		}
+		else 
+		{
+			if (stageEnemyNum[i] <= 0)
+			{
+				stageClearFlag[i] = true;
+			}
 		}
 		/*if (stageNum - 1 != i)
 		{
