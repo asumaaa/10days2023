@@ -73,6 +73,7 @@ public:
 	void SetObject(FbxObject3D* object);
 	void HitPlane();
 	void SetTypeData(int type);
+	void SetStageNumber();
 
 	//void SetType(int num,int type) { this->type[num] = type; }
 	void SetStageMid(XMFLOAT3 stageMid) { this->stageMid = stageMid; }
@@ -84,6 +85,9 @@ public:
 	XMFLOAT3 GetScale(int num) { return scale[num]; }
 	bool GetIsDead(int num) { return isDead_[num]; }
 	int GetSize(){ return object.size(); }
+	//コライダーデータ
+	JSONLoader::ColliderData GetColliderData(int num);
+	int GetEnemyNum() { return enemyNum; };
 
 	//当たり判定
 	//敵同士
@@ -100,6 +104,11 @@ public:
 	//反射切り替え
 	void RefMoveX(int i);
 	void RefMoveZ(int i);
+
+	void DeleteEnemy();
+
+	//そのステージの敵が全て消滅したかのフラグ
+	bool GetDeadEnemy1() { return deadEnemy1; }
 
 
 	//静的メンバ変数
@@ -128,6 +137,8 @@ public:
 	std::vector<XMFLOAT3> scale;
 	//種類
 	std::vector<int> type_;
+	//種類2
+	std::vector<int> stageNember_;
 	//hp
 	std::vector<int> hp_;
 	//死亡フラグ
@@ -158,5 +169,11 @@ public:
 	//当たり判定関連
 	//接地フラグ
 	bool groundFlag = false;
+
+	//そのステージの全ての敵が消滅したかのフラグ
+	bool deadEnemy1 = false;
+
+	//敵の総数
+	int enemyNum = 0;
 };
 

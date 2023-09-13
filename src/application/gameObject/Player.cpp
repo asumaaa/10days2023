@@ -43,8 +43,6 @@ void Player::UpdateObject()
 	object->SetPosition(position);
 	object->SetRotation(rotation0 + rotation1);
 	object->SetScale(scale);
-
-	object->Update();
 }
 
 void Player::UpdateBullet()
@@ -79,7 +77,7 @@ void Player::Move()
 	//UpdateJump();
 
 	//重力更新
-	UpdateGravity();
+	/*UpdateGravity();*/
 	
 	//キー操作
 	KeyControl();

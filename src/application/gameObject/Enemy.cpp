@@ -3,8 +3,8 @@
 #include "Vector3.h"
 #include "Imgui.h"
 
-#define G 6.674	//–œ—Lˆø—Í’è”
-#define GAcceleration 9.80665 * 1/10	//d—Í‰Á‘¬“x
+#define G 6.674	//ä¸‡æœ‰å¼•åŠ›å®šæ•°
+#define GAcceleration 9.80665 * 1/10	//é‡åŠ›åŠ é€Ÿåº¦
 
 Camera* Enemy::camera = nullptr;
 Input* Enemy::input = nullptr;
@@ -20,26 +20,26 @@ void Enemy::Initialize()
 
 void Enemy::Update(XMFLOAT3 playerPos)
 {
-	//ƒvƒŒƒCƒ„[À•Wæ“¾
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼åº§æ¨™å–å¾—
 	this->playerPosition = playerPos;
 
-	//€–Sƒ`ƒFƒbƒN
+	//æ­»äº¡ãƒã‚§ãƒƒã‚¯
 	//CheckIsDead();
 
-	//“®‚«
+	//å‹•ã
 	TypeUpdate();
 
-	//ƒIƒuƒWƒFƒNƒgXV
+	//ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆæ›´æ–°
 	UpdateObject();
 
-	//ƒXƒvƒ‰ƒCƒgXV
+	//ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæ›´æ–°
 	UpdateSprite();
 
 }
 
 void Enemy::UpdateObject()
 {
-	//XV
+	//æ›´æ–°
 	int i = 0;
 	for (std::unique_ptr<FbxObject3D>& objects : object)
 	{
@@ -48,7 +48,6 @@ void Enemy::UpdateObject()
 			objects->SetPosition(position[i]);
 			objects->SetRotation(rotation[i]);
 			objects->SetScale(scale[i]);
-			objects->Update();
 		}
 
 		i++;
@@ -59,7 +58,7 @@ void Enemy::UpdateObject()
 
 void Enemy::UpdateSprite()
 {
-	//HPƒo[
+	//HPãƒãƒ¼
 	spriteHpBar->SetAlpha(1.0f);
 	spriteHpBar->SetScale({ 100.0f, 100.0 });
 	spriteHpBar->SetPosition({ 0.0f, 0.0 });
@@ -89,7 +88,7 @@ void Enemy::SetSRV(ID3D12DescriptorHeap* SRV)
 void Enemy::TypeUpdate()
 {
 
-	//ËŒ‚XV
+	//å°„æ’ƒæ›´æ–°
 	if (shotCoolTimer > ShotCoolTime) {
 		isShot = true;
 	}
@@ -103,7 +102,7 @@ void Enemy::TypeUpdate()
 		if (!isDead_[i]) {
 			switch (type_[i]) {
 
-				//ˆÚ“®Œn
+				//ç§»å‹•ç³»
 			case MoveXEnemy:
 				MoveX(i);
 				break;
@@ -121,7 +120,7 @@ void Enemy::TypeUpdate()
 				MoveHoming(i);
 				break;
 
-				//ËŒ‚Œn
+				//å°„æ’ƒç³»
 			case NormalShotXEnemy:
 				ShotX(i);
 				break;
@@ -139,7 +138,7 @@ void Enemy::TypeUpdate()
 				ShotHoming(i);
 				break;
 
-				//•¡‡Œn,“ÁêŒn
+				//è¤‡åˆç³»,ç‰¹æ®Šç³»
 			case HomingMoveShotEnemy:
 				MoveHoming(i);
 				ShotHoming(i);
@@ -150,7 +149,7 @@ void Enemy::TypeUpdate()
 		i++;
 	}
 
-	//ËŒ‚XV
+	//å°„æ’ƒæ›´æ–°
 	bullet->Update();
 
 	if (isShot) {
@@ -162,18 +161,18 @@ void Enemy::TypeUpdate()
 
 void Enemy::MoveHoming(int i)
 {
-	//©‹@‚Æ“G‚ÌƒxƒNƒgƒ‹‚ğ—pˆÓ
+	//è‡ªæ©Ÿã¨æ•µã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç”¨æ„
 	Vector3 playerVec = { playerPosition.x,playerPosition.y,playerPosition.z };
 	Vector3 enemyVec = { position[i].x,position[i].y,position[i].z };
 
-	//©‹@‚Æ‚ÌƒxƒNƒgƒ‹‚ğæ‚é
+	//è‡ªæ©Ÿã¨ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–ã‚‹
 	Vector3 velocity = playerVec - enemyVec;
 
-	//³‹K‰»‚ğ‚µ‚Ä‘¬“x‚ğ‚©‚¯‚é
+	//æ­£è¦åŒ–ã‚’ã—ã¦é€Ÿåº¦ã‚’ã‹ã‘ã‚‹
 	velocity.normalize();
 	velocity *= enemySpeed;
 
-	//ˆÚ“®ƒxƒNƒgƒ‹‚ğ‰ÁZ
+	//ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’åŠ ç®—
 	position[i].x += velocity.x;
 	position[i].z += velocity.z;
 
@@ -181,11 +180,11 @@ void Enemy::MoveHoming(int i)
 
 void Enemy::MoveX(int i)
 {
-	//ƒXƒe[ƒW‚Ì’[‚ğŒvZ
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã®ç«¯ã‚’è¨ˆç®—
 	float stageRight = stageMid.x + (stageSize.x);
 	float stageLeft = stageMid.x - (stageSize.x);
 
-	//ƒXƒe[ƒW’[‚É—ˆ‚½‚ç”½Ë‚³‚¹‚é
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ç«¯ã«æ¥ãŸã‚‰åå°„ã•ã›ã‚‹
 	if (moveX[i]) {
 		if (position[i].x > stageRight) {
 			moveX[i] = false;
@@ -197,24 +196,24 @@ void Enemy::MoveX(int i)
 		}
 	}
 
-	//ˆÚ“®
+	//ç§»å‹•
 	if (moveX[i]) {
-		//‰E‚ÉˆÚ“®
+		//å³ã«ç§»å‹•
 		position[i].x += enemySpeed;
 	}
 	else {
-		//¶‚ÉˆÚ“®
+		//å·¦ã«ç§»å‹•
 		position[i].x -= enemySpeed;
 	}
 }
 
 void Enemy::MoveZ(int i)
 {
-	//ƒXƒe[ƒW‚Ì’[‚ğŒvZ
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ã®ç«¯ã‚’è¨ˆç®—
 	float stageUp = stageMid.z + (stageSize.z);
 	float stageDown = stageMid.z - (stageSize.z);
 
-	//ƒXƒe[ƒW’[‚É—ˆ‚½‚ç”½Ë‚³‚¹‚é
+	//ã‚¹ãƒ†ãƒ¼ã‚¸ç«¯ã«æ¥ãŸã‚‰åå°„ã•ã›ã‚‹
 	if (moveZ[i]) {
 		if (position[i].z > stageUp) {
 			moveZ[i] = false;
@@ -226,24 +225,24 @@ void Enemy::MoveZ(int i)
 		}
 	}
 
-	//ˆÚ“®
+	//ç§»å‹•
 	if (moveZ[i]) {
-		//‰E‚ÉˆÚ“®
+		//å³ã«ç§»å‹•
 		position[i].z += enemySpeed;
 	}
 	else {
-		//¶‚ÉˆÚ“®
+		//å·¦ã«ç§»å‹•
 		position[i].z -= enemySpeed;
 	}
 }
 
 void Enemy::Shot(int i, XMFLOAT3 velosity)
 {
-	////ƒVƒ‡ƒbƒgƒtƒ‰ƒO‚ğ—§‚Ä‚é
+	////ã‚·ãƒ§ãƒƒãƒˆãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 	//bullet->SetShotFlag(true);
-	//’e¶¬êŠ‚Ævelocity‚ğƒZƒbƒg
+	//å¼¾ç”Ÿæˆå ´æ‰€ã¨velocityã‚’ã‚»ãƒƒãƒˆ
 	bullet->SetBullet(position[i], velosity);
-	//’e‚Ì¶¬
+	//å¼¾ã®ç”Ÿæˆ
 	bullet->CreateBullet();
 }
 
@@ -251,12 +250,12 @@ void Enemy::ShotX(int i)
 {
 	if (isShot) {
 
-		//---‰E•ûŒü‚ÉËŒ‚---
+		//---å³æ–¹å‘ã«å°„æ’ƒ---
 
 		XMFLOAT3 rightVec = { bulletSpeed,0,0 };
 		Shot(i, rightVec);
 
-		//---¶•ûŒü‚ÉËŒ‚---
+		//---å·¦æ–¹å‘ã«å°„æ’ƒ---
 
 		XMFLOAT3 leftVec = { -bulletSpeed,0,0 };
 		Shot(i, leftVec);
@@ -267,12 +266,12 @@ void Enemy::ShotZ(int i)
 {
 	if (isShot) {
 
-		//---ã•ûŒü‚ÉËŒ‚---
+		//---ä¸Šæ–¹å‘ã«å°„æ’ƒ---
 
 		XMFLOAT3 upVec = { 0,0,bulletSpeed };
 		Shot(i, upVec);
 
-		//---‰º•ûŒü‚ÉËŒ‚---
+		//---ä¸‹æ–¹å‘ã«å°„æ’ƒ---
 
 		XMFLOAT3 downVec = { 0,0,-bulletSpeed };
 		Shot(i, downVec);
@@ -284,14 +283,14 @@ void Enemy::ShotHoming(int i)
 
 	if (isShot) {
 
-		//©‹@‚Æ“G‚ÌƒxƒNƒgƒ‹‚ğ—pˆÓ
+		//è‡ªæ©Ÿã¨æ•µã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç”¨æ„
 		Vector3 playerVec = { playerPosition.x,playerPosition.y,playerPosition.z };
 		Vector3 enemyVec = { position[i].x,position[i].y,position[i].z };
 
-		//©‹@‚Æ‚ÌƒxƒNƒgƒ‹‚ğæ‚é
+		//è‡ªæ©Ÿã¨ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–ã‚‹
 		Vector3 velocity = playerVec - enemyVec;
 
-		//³‹K‰»‚ğ‚µ‚Ä‘¬“x‚ğ‚©‚¯‚é
+		//æ­£è¦åŒ–ã‚’ã—ã¦é€Ÿåº¦ã‚’ã‹ã‘ã‚‹
 		velocity.normalize();
 		velocity *= bulletSpeed;
 
@@ -302,30 +301,30 @@ void Enemy::ShotHoming(int i)
 
 void Enemy::UpdateGravity()
 {
-	////Ú’n‚µ‚Ä‚¢‚½‚çƒ^ƒCƒ}[‚ÆƒxƒNƒgƒ‹ƒŠƒZƒbƒg
+	////æ¥åœ°ã—ã¦ã„ãŸã‚‰ã‚¿ã‚¤ãƒãƒ¼ã¨ãƒ™ã‚¯ãƒˆãƒ«ãƒªã‚»ãƒƒãƒˆ
 	//if (groundFlag == true)
 	//{
 	//	fallTimer = 0.0f;
 	//	fallVelocity = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	//}
 
-	////Ú’n‚µ‚Ä‚¢‚È‚¯‚ê‚Î
+	////æ¥åœ°ã—ã¦ã„ãªã‘ã‚Œã°
 	//if (groundFlag == false)
 	//{
-	//	//—‰ºƒ^ƒCƒ}[‚ªÅ‘å’l‚æ‚è¬‚³‚¯‚ê‚Î
+	//	//è½ä¸‹ã‚¿ã‚¤ãƒãƒ¼ãŒæœ€å¤§å€¤ã‚ˆã‚Šå°ã•ã‘ã‚Œã°
 	//	if (fallTimer < fallTime)
 	//	{
 	//		fallTimer += fallFrame;
 	//	}
 	//}
 
-	////—‰ºƒxƒNƒgƒ‹ŒvZ
+	////è½ä¸‹ãƒ™ã‚¯ãƒˆãƒ«è¨ˆç®—
 	//fallVelocity.y = -(GAcceleration * fallTimer);
 
-	////À•W‚É—‰ºƒxƒNƒgƒ‹‚ğ‰ÁZ
+	////åº§æ¨™ã«è½ä¸‹ãƒ™ã‚¯ãƒˆãƒ«ã‚’åŠ ç®—
 	//position = position + fallVelocity;
 
-	//À•W‚É—‰ºƒxƒNƒgƒ‹‚ğ‰ÁZ
+	//åº§æ¨™ã«è½ä¸‹ãƒ™ã‚¯ãƒˆãƒ«ã‚’åŠ ç®—
 	/*position = position + fallVelocity;*/
 }
 
@@ -335,39 +334,51 @@ void Enemy::UpdateAttack()
 
 void Enemy::SetObject(FbxObject3D* object)
 {
-	//ˆø”‚ÌƒIƒuƒWƒFƒNƒg‚ğƒZƒbƒg
+	//å¼•æ•°ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚»ãƒƒãƒˆ
 	Enemy::object.emplace_back(object);
 
 	position.emplace_back(object->GetPosition());
 	rotation.emplace_back(object->GetRotation());
 	scale.emplace_back(object->GetScale());
+	enemyNum++;
 
-	SetTypeData(NormalShotXZEnemy);
+	if (object->GetFileName() == "enemy_homingShotEnemy")SetTypeData(HomingShotEnemy); 
+	else if (object->GetFileName() == "enemy_normalShotXEnemy")SetTypeData(NormalShotXEnemy);
+	else if (object->GetFileName() == "enemy_normalShotZEnemy")SetTypeData(NormalShotZEnemy);
+	else if (object->GetFileName() == "enemy_moveXZEnemy")SetTypeData(MoveXZEnemy);
+	else if (object->GetFileName() == "enemy_homingMoveShotEnemy")SetTypeData(HomingMoveShotEnemy);
+	else if (object->GetFileName() == "enemy_homingMoveEnemy")SetTypeData(HomingMoveEnemy);
+	else if (object->GetFileName() == "enemy_normalShotXZEnemy")SetTypeData(NormalShotXZEnemy);
+	else if (object->GetFileName() == "enemy_normalShotZEnemy")SetTypeData(NormalShotZEnemy);
+	else { SetTypeData(HomingShotEnemy); }
+
+	SetTypeData(HomingMoveShotEnemy);
+
 }
 
 void Enemy::HitPlane()
 {
-	////Ú’nƒtƒ‰ƒO‚ğ—§‚Ä‚é
+	////æ¥åœ°ãƒ•ãƒ©ã‚°ã‚’ç«‹ã¦ã‚‹
 	//groundFlag = true;
 
-	////‚ß‚è‚Ü‚È‚­‚È‚é‚Ü‚Å‰ÁZ
+	////ã‚ã‚Šè¾¼ã¾ãªããªã‚‹ã¾ã§åŠ ç®—
 	//position.y += 0.1f;
 }
 
 void Enemy::SetTypeData(int type)
 {
-	//‹¤’Ê•”•ªƒf[ƒ^ƒZƒbƒg
+	//å…±é€šéƒ¨åˆ†ãƒ‡ãƒ¼ã‚¿ã‚»ãƒƒãƒˆ
 	this->type_.push_back(type);
 	moveX.push_back(true);
 	moveZ.push_back(true);
 	isDead_.push_back(false);
 
-	//ƒ^ƒCƒv‚²‚Æ‚Ìî•ñƒZƒbƒg
+	//ã‚¿ã‚¤ãƒ—ã”ã¨ã®æƒ…å ±ã‚»ãƒƒãƒˆ
 	int hp = 0;
 
 	switch (type) {
 
-		//ˆÚ“®Œn
+		//ç§»å‹•ç³»
 	case MoveXEnemy:
 		hp = 1;
 		break;
@@ -384,7 +395,7 @@ void Enemy::SetTypeData(int type)
 		hp = 1;
 		break;
 
-		//ËŒ‚Œn
+		//å°„æ’ƒç³»
 	case NormalShotXEnemy:
 		hp = 3;
 		break;
@@ -401,7 +412,7 @@ void Enemy::SetTypeData(int type)
 		hp = 3;
 		break;
 
-		//•¡‡Œn,“ÁêŒn
+		//è¤‡åˆç³»,ç‰¹æ®Šç³»
 	case HomingMoveShotEnemy:
 		hp = 1;
 		break;
@@ -411,13 +422,82 @@ void Enemy::SetTypeData(int type)
 
 }
 
+void Enemy::SetStageNumber()
+{
+	int i = 0;
+	for (std::unique_ptr<FbxObject3D>& objects : object)
+	{
+		if (objects->GetFileName() == "enemy1_homingShotEnemy" || objects->GetFileName() == "enemy1_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy1_normalShotYEnemy" || objects->GetFileName() == "enemy1_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(1);
+		}
+		if (objects->GetFileName() == "enemy2_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy2_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(2);
+		}
+		if (objects->GetFileName() == "enemy3_homingShotEnemy" || objects->GetFileName() == "enemy3_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy3_normalShotYEnemy" || objects->GetFileName() == "enemy3_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(3);
+		}
+		if (objects->GetFileName() == "enemy4_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy4_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(4);
+		}
+		if (objects->GetFileName() == "enemy5_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy5_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(5);
+		}
+		if (objects->GetFileName() == "enemy6_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy6_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(6);
+		}
+		if (objects->GetFileName() == "enemy7_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy7_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(7);
+		}
+		if (objects->GetFileName() == "enemy8_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy8_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(8);
+		}
+		if (objects->GetFileName() == "enemy9_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy9_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(9);
+		}
+		i++;
+	}
+}
+
+
+JSONLoader::ColliderData Enemy::GetColliderData(int num)
+{
+	std::list<std::unique_ptr<FbxObject3D>>::iterator itr;
+	itr = object.begin();
+	if (num != 0)
+	{
+		for (int i = 0; i < num; i++)
+		{
+			itr++;
+		}
+	}
+
+	return itr->get()->GetColliderData();
+}
 
 void Enemy::OnCollisionToEnemy(int i, XMFLOAT3 enemyPos)
 {
 
 	switch (type_[i]) {
 
-		//ˆÚ“®Œn
+		//ç§»å‹•ç³»
 	case MoveXEnemy:
 		RefMoveX(i);
 		break;
@@ -435,7 +515,7 @@ void Enemy::OnCollisionToEnemy(int i, XMFLOAT3 enemyPos)
 		RefVec(i, enemyPos);
 		break;
 
-		//ËŒ‚Œn
+		//å°„æ’ƒç³»
 	case NormalShotXEnemy:
 	
 		break;
@@ -452,7 +532,7 @@ void Enemy::OnCollisionToEnemy(int i, XMFLOAT3 enemyPos)
 	
 		break;
 
-		//•¡‡Œn,“ÁêŒn
+		//è¤‡åˆç³»,ç‰¹æ®Šç³»
 	case HomingMoveShotEnemy:
 		RefVec(i,enemyPos);
 		break;
@@ -462,16 +542,16 @@ void Enemy::OnCollisionToEnemy(int i, XMFLOAT3 enemyPos)
 
 void Enemy::OnCollisionToPlayer(int i,XMFLOAT3 playerPos)
 {
-	//“G“¯m‚Æ“¯‚¶‹““®
+	//æ•µåŒå£«ã¨åŒã˜æŒ™å‹•
 	OnCollisionToEnemy(i,playerPos);
 }
 
 void Enemy::OnCollisionToBullet(int i)
 {
-	//hpŒ¸
+	//hpæ¸›
 	hp_[i]--;
 
-	//hp‚ª0ˆÈ‰º‚È‚ç€–S
+	//hpãŒ0ä»¥ä¸‹ãªã‚‰æ­»äº¡
 	if (hp_[i] <= 0) {
 		isDead_[i] = true;
 	}
@@ -481,7 +561,7 @@ void Enemy::CheckIsDead()
 {
 	for (int i = 0; i < object.size(); i++) {
 
-		//€–S‚µ‚Ä‚¢‚½‚ç—v‘f‚ğ”z—ñ‚©‚çíœ
+		//æ­»äº¡ã—ã¦ã„ãŸã‚‰è¦ç´ ã‚’é…åˆ—ã‹ã‚‰å‰Šé™¤
 		if (isDead_[i]) {
 			position.erase(position.begin() + i);
 			rotation.erase(rotation.begin() + i);
@@ -498,18 +578,18 @@ void Enemy::CheckIsDead()
 
 void Enemy::RefVec(int i, XMFLOAT3 enemyPos)
 {
-	//“G“¯m‚ÌƒxƒNƒgƒ‹‚ğ—pˆÓ
+	//æ•µåŒå£«ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ç”¨æ„
 	Vector3 enemy1 = { enemyPos.x,enemyPos.y,enemyPos.z };
 	Vector3 enemy2 = { position[i].x,position[i].y,position[i].z };
 
-	//“G“¯m‚ÌƒxƒNƒgƒ‹‚ğæ‚é
+	//æ•µåŒå£«ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–ã‚‹
 	Vector3 velocity = enemy1 - enemy2;
 
-	//³‹K‰»‚ğ‚µ‚Ä‘¬“x‚ğ‚©‚¯‚é
+	//æ­£è¦åŒ–ã‚’ã—ã¦é€Ÿåº¦ã‚’ã‹ã‘ã‚‹
 	velocity.normalize();
 	velocity *= enemySpeed;
 
-	//ˆÚ“®ƒxƒNƒgƒ‹‚ğ‰ÁZ
+	//ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’åŠ ç®—
 	position[i].x += -velocity.x;
 	position[i].z += -velocity.z;
 }
@@ -532,5 +612,10 @@ void Enemy::RefMoveZ(int i)
 	else {
 		moveZ[i] = 1;
 	}
+}
+
+void Enemy::DeleteEnemy()
+{
+	/*if*/
 }
 
