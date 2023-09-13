@@ -29,6 +29,15 @@
 #include "BillboardSprite.h"
 #include "BillboardSpriteModel.h"
 
+enum Scene {
+	TITLE,
+	SERECT,
+	PLAY,
+	MENU,
+	GAMEOVER,
+	CLEAR
+};
+
 class GameScene
 {
 	//メンバ関数
@@ -42,6 +51,8 @@ public:
 	//更新
 	void Update();
 	void UpdateCollider();
+	//シーン切り替え
+	void SceneChange();
 	//描画
 	void Draw();
 	void DrawFBXLightView();
@@ -49,6 +60,9 @@ public:
 	void DrawCollider();
 	void DrawSprite();
 	void DrawParticle();
+
+	//シーン変更でのリセット
+	void ResetSceneData();
 
 	//セッター
 	void SetSRV(ID3D12DescriptorHeap* SRV);
@@ -63,6 +77,16 @@ private:
 	DXInput* dxInput = new DXInput();
 	//カメラ
 	std::unique_ptr<Camera> camera_;
+
+	//シーン
+	int scene = TITLE;
+	//選択中のボタン
+	//0:タイトル	1:ステージセレクト
+	int serectScene = 0;
+	//0:ステージ1	1:ステージ2		2:ステージ3
+	int serectStage = 0;
+	//クリアフラグ
+	bool isClear = false;
 
 	//fbx
 	std::list<std::unique_ptr<FbxModel>> models;

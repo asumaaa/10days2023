@@ -15,17 +15,25 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	//弾更新
-	UpdateBullet();
+	if (!isDead) {
 
-	//動く
-	Move();
+		//無敵時間更新
+		if (invTimer) {
+			invTimer--;
+		}
 
-	//オブジェクト更新
-	UpdateObject();
+		//弾更新
+		UpdateBullet();
 
-	ImGui::Begin("PlayerPos");
-	ImGui::Text("%f,%f,%f",position.x,position.y,position.z);
+		//動く
+		Move();
+
+		//オブジェクト更新
+		UpdateObject();
+	}
+
+	ImGui::Begin("PlayerHp");
+	ImGui::Text("%d",HP);
 	ImGui::End();
 
 }
@@ -163,4 +171,23 @@ void Player::HitPlane()
 
 	//オブジェクト更新
 	UpdateObject();
+}
+
+void Player::HitEnemy()
+{
+	//無敵時間ではなかったらhpを減らし無敵時間追加
+	if (!invTimer) {
+		HP--;
+		invTimer = InvTime;
+	}
+	//HPが0以下なら死亡
+	if (!HP) {
+		isDead = true;
+	}
+}
+
+void Player::Reset()
+{
+	HP = 10;
+	isDead = false;
 }

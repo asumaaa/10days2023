@@ -49,6 +49,11 @@ public:
 	void SetSRV(ID3D12DescriptorHeap* SRV);
 	void HitPlane();
 
+	void HitEnemy();
+
+	//リセット
+	void Reset();
+
 	//外部ファイルによる初期値読み込み
 	void LoadConfig();
 
@@ -57,6 +62,8 @@ public:
 	XMFLOAT3 GetRotation0() { return rotation0; }
 	XMFLOAT3 GetRotation1() { return rotation1; }
 	XMFLOAT3 GetScale() { return scale; }
+
+	bool GetIsDead() { return isDead; }
 
 	//静的メンバ変数
 private:
@@ -95,8 +102,12 @@ public:
 
 	//ステータス関連
 	//プレイヤーのHP
-	float HP = 10;
-
+	int HP = 10;
+	//死亡フラグ
+	bool isDead = false;
+	//無敵時間
+	const int InvTime = 10;
+	int invTimer = 0;
 
 	//挙動関連
 	//落下

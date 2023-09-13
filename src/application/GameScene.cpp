@@ -321,6 +321,13 @@ void GameScene::Finalize()
 
 void GameScene::Update()
 {
+	//シーン切り替え
+	SceneChange();
+
+	ImGui::Begin("scene");
+	ImGui::Text("%d", scene);
+	ImGui::End();
+
 	//カメラ更新
 	camera_->UpdatePlayer(player->GetPosition(), player->GetRotation1());
 	//camera_->DebugUpdate();
@@ -332,72 +339,80 @@ void GameScene::Update()
 	billboardSprite->SetScale(XMFLOAT3(2.5f, 0.3f, 1.0f));
 	billboardSprite->Update();
 
-	/*particleObject->SetPosition(XMFLOAT3(10.0f,5.0f,0));*/
-	//パーティクル
-	/*particleManager->Update();*/
-	if (input_->TriggerKey(DIK_N))
-	{
-		/*sparkParticle->Add(XMFLOAT3(0,0,0));*/
+	switch (scene) {
+
+	case PLAY:
+
+		/*particleObject->SetPosition(XMFLOAT3(10.0f,5.0f,0));*/
+		//パーティクル
+		/*particleManager->Update();*/
+		if (input_->TriggerKey(DIK_N))
+		{
+			/*sparkParticle->Add(XMFLOAT3(0,0,0));*/
+		}
+		sparkParticle->Update();
+
+		if (input_->TriggerKey(DIK_N))
+		{
+			sparkParticle2->Add(XMFLOAT3(0, 3.0f, 0));
+			explosionParticle1->Add(XMFLOAT3(0, 3.0f, 0));
+			explosionParticle2->Add(XMFLOAT3(0, 3.0f, 0));
+		}
+		sparkParticle2->Update();
+		explosionParticle1->Update();
+		explosionParticle2->Update();
+
+		//ライト
+		light->SetEye(XMFLOAT3(lightPos));
+		light->SetTarget(XMFLOAT3(lightTarget));
+		light->SetDir(XMFLOAT3(lightDir));
+		light->Update();
+
+		//ライト
+		lightGroup->SetAmbientColor(XMFLOAT3(1, 1, 1));
+		lightGroup->SetDirLightActive(0, false);
+		lightGroup->SetDirLightActive(1, false);
+		lightGroup->SetDirLightActive(2, false);
+		lightGroup->Update();
+
+		//プレイヤー
+		player->Update();
+
+		//敵
+		enemy->Update(player->GetPosition());
+
+		//平面
+		/*plane->Update();*/
+
+		//スペースキーでファイル読み込み更新
+		//if(input_->TriggerKey(DIK_SPACE))
+		//{
+		//	jsonLoader->LoadFile("Resources/json/demo1.json"); 
+		//	int i = 0;
+		//	for (std::unique_ptr<FbxObject3D>& object0 : object)
+		//	{
+		//		//プレイヤー以外のオブジェクト更新
+		//		if (object0->GetFileName() != "player")
+		//		{
+		//			object0->SetPosition(jsonLoader->GetPosition(i));
+		//			object0->SetScale(jsonLoader->GetScale(i));
+		//			object0->SetRotation(jsonLoader->GetRotation(i));
+		//		}
+		//		i++;
+		//	}
+		//}
+
+		for (std::unique_ptr<FbxObject3D>& object0 : object)
+		{
+			object0->Update();
+		}
+
+		//コライダー更新
+		UpdateCollider();
+
+		break;
 	}
-	sparkParticle->Update();
 
-	if (input_->TriggerKey(DIK_N))
-	{
-		sparkParticle2->Add(XMFLOAT3(0, 3.0f, 0));
-		explosionParticle1->Add(XMFLOAT3(0, 3.0f, 0));
-		explosionParticle2->Add(XMFLOAT3(0, 3.0f, 0));
-	}
-	sparkParticle2->Update();
-	explosionParticle1->Update();
-	explosionParticle2->Update();
-
-	//ライト
-	light->SetEye(XMFLOAT3(lightPos));
-	light->SetTarget(XMFLOAT3(lightTarget));
-	light->SetDir(XMFLOAT3(lightDir));
-	light->Update();
-
-	//ライト
-	lightGroup->SetAmbientColor(XMFLOAT3(1, 1, 1));
-	lightGroup->SetDirLightActive(0, false);
-	lightGroup->SetDirLightActive(1, false);
-	lightGroup->SetDirLightActive(2, false);
-	lightGroup->Update();
-
-	//プレイヤー
-	player->Update();
-
-	//敵
-	enemy->Update(player->GetPosition());
-
-	//平面
-	/*plane->Update();*/
-
-	//スペースキーでファイル読み込み更新
-	//if(input_->TriggerKey(DIK_SPACE))
-	//{
-	//	jsonLoader->LoadFile("Resources/json/demo1.json"); 
-	//	int i = 0;
-	//	for (std::unique_ptr<FbxObject3D>& object0 : object)
-	//	{
-	//		//プレイヤー以外のオブジェクト更新
-	//		if (object0->GetFileName() != "player")
-	//		{
-	//			object0->SetPosition(jsonLoader->GetPosition(i));
-	//			object0->SetScale(jsonLoader->GetScale(i));
-	//			object0->SetRotation(jsonLoader->GetRotation(i));
-	//		}
-	//		i++;
-	//	}
-	//}
-
-	for (std::unique_ptr<FbxObject3D>& object0 : object)
-	{
-		object0->Update();
-	}
-
-	//コライダー更新
-	UpdateCollider();
 }
 
 void GameScene::UpdateCollider()
@@ -443,6 +458,9 @@ void GameScene::UpdateCollider()
 						explosionParticle2->Add(XMFLOAT3(enemyBullet->GetPosition(i)));
 						//弾
 						enemyBullet->SetHitFlag(true, i);
+
+						//プレイヤー被弾処理
+						player->HitEnemy();
 					}
 				}
 			}
@@ -462,6 +480,8 @@ void GameScene::UpdateCollider()
 					if (ColliderManager::CheckCollider(object0->GetColliderData(), object1->GetColliderData()))
 					{
 						enemy->OnCollisionToEnemy(object1->GetEnemyNum(), player->GetPosition());
+						//プレイヤー被弾処理
+						player->HitEnemy();
 					}
 				}
 			}
@@ -549,6 +569,120 @@ void GameScene::UpdateCollider()
 	ColliderManager::PostUpdate();
 }
 
+void GameScene::SceneChange()
+{
+	switch (scene) {
+	case TITLE:
+		//スペースでステージセレクト
+		if (input_->TriggerKey(DIK_SPACE)) {
+			scene = SERECT;
+		}
+		break;
+	case SERECT:
+		//左右キーでステージセレクト、スペースで決定
+		if (input_->TriggerKey(DIK_RIGHT)) {
+			if (serectStage < 3) {
+				serectStage++;
+			}
+		}else if (input_->TriggerKey(DIK_LEFT)) {
+			if (serectStage > 0) {
+				serectStage--;
+			}
+		}
+		if (input_->TriggerKey(DIK_SPACE)) {
+			scene = PLAY;
+		}
+		break;
+	case PLAY:
+		//プレイヤー死亡でゲームオーバー
+		if (player->GetIsDead()) {
+			scene = GAMEOVER;
+		}
+		//ステージクリアでクリア
+		else if (isClear) {
+			scene = CLEAR;
+		}
+		else if (input_->TriggerKey(DIK_M)) {
+			scene = MENU;
+		}
+		break;
+	case MENU:
+		//左右キーでシーンセレクト、スペースで決定
+		if (input_->TriggerKey(DIK_RIGHT)) {
+			serectScene = 1;
+		}
+		else if (input_->TriggerKey(DIK_LEFT)) {
+			serectScene = 0;
+		}
+
+		if (input_->TriggerKey(DIK_SPACE)) {
+
+			if (serectScene) {
+				scene = SERECT;
+			}
+			else {
+				scene = TITLE;
+			}
+
+			//要素リセット
+			ResetSceneData();
+
+		}
+		//Mキーでプレイシーンに戻る
+		else if (input_->TriggerKey(DIK_M)) {
+			scene = PLAY;
+		}
+
+
+
+	case GAMEOVER:
+		//左右キーでシーンセレクト、スペースで決定
+		if (input_->TriggerKey(DIK_RIGHT)) {
+			serectScene = 1;
+		}
+		else if (input_->TriggerKey(DIK_LEFT)) {
+			serectScene = 0;
+		}
+		if (input_->TriggerKey(DIK_SPACE)) {
+
+			if (serectScene) {
+				scene = SERECT;
+			}
+			else {
+				scene = TITLE;
+			}
+
+			//要素リセット
+			ResetSceneData();
+
+		}
+		break;
+
+	case CLEAR:
+		//左右キーでシーンセレクト、スペースで決定
+		if (input_->TriggerKey(DIK_RIGHT)) {
+			serectScene = 1;
+		}
+		else if (input_->TriggerKey(DIK_LEFT)) {
+			serectScene = 0;
+		}
+		if (input_->TriggerKey(DIK_SPACE)) {
+
+			if (serectScene) {
+				scene = SERECT;
+			}
+			else {
+				scene = TITLE;
+			}
+
+			//要素リセット
+			ResetSceneData();
+		}
+		break;
+	}
+
+}
+
 void GameScene::Draw()
 {
 	//ImGui
@@ -575,6 +709,7 @@ void GameScene::Draw()
 
 void GameScene::DrawFBXLightView()
 {
+
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
 		object0->DrawLightView(dxCommon_->GetCommandList());
@@ -605,6 +740,15 @@ void GameScene::DrawParticle()
 	sparkParticle2->Draw(dxCommon_->GetCommandList());
 	explosionParticle1->Draw(dxCommon_->GetCommandList());
 	explosionParticle2->Draw(dxCommon_->GetCommandList());
+}
+
+void GameScene::ResetSceneData()
+{
+	isClear = false;
+	serectStage = 0;
+	serectStage = 0;
+
+	player->Reset();
 }
 
 void GameScene::SetSRV(ID3D12DescriptorHeap* SRV)
