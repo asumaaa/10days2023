@@ -47,7 +47,14 @@ public:
 	void SetBullet(PlayerBullet* playerBullet) { Player::bullet = playerBullet; }
 	void SetObject(FbxObject3D* object);
 	void SetSRV(ID3D12DescriptorHeap* SRV);
+	void SetStageMid(XMFLOAT3 stageMid) { this->stageMid = stageMid; }
+
+	//当たり判定
 	void HitPlane();
+	void HitEnemy();
+
+	//リセット
+	void Reset();
 
 	//外部ファイルによる初期値読み込み
 	void LoadConfig();
@@ -57,6 +64,8 @@ public:
 	XMFLOAT3 GetRotation0() { return rotation0; }
 	XMFLOAT3 GetRotation1() { return rotation1; }
 	XMFLOAT3 GetScale() { return scale; }
+
+	bool GetIsDead() { return isDead; }
 
 	//静的メンバ変数
 private:
@@ -88,6 +97,10 @@ public:
 	XMFLOAT3 posVelocity = { 0.0f,0.0f,0.0f };
 	//角度ベクトル
 	XMFLOAT3 rotVelocity = { 0.0f,0.0f,0.0f };
+	//ステージの中心座標
+	XMFLOAT3 stageMid = {};
+	//ステージのサイズ
+	XMFLOAT3 stageSize = { 40,1,40 };
 
 	//当たり判定関連
 	//接地フラグ
@@ -95,8 +108,12 @@ public:
 
 	//ステータス関連
 	//プレイヤーのHP
-	float HP = 10;
-
+	int HP = 10;
+	//死亡フラグ
+	bool isDead = false;
+	//無敵時間
+	const int InvTime = 10;
+	int invTimer = 0;
 
 	//挙動関連
 	//落下
