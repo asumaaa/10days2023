@@ -90,6 +90,7 @@ public:
 	JSONLoader::ColliderData GetColliderData(int num);
 	int GetEnemyNum() { return enemyNum; };
 	int GetEnemyStageNum(int num) { return stageNember_[num]; }
+	bool GetStageClearFlag(int num) { return stageClearFlag[num]; }
 
 	//当たり判定
 	//敵同士
@@ -182,6 +183,8 @@ public:
 
 	//そのステージの敵が全滅したか
 	bool stageFlag[9];
+	bool stageClearFlag[9];
+	int stageEnemyNum[9];
 	//現在のステージ
 	int stageNum = 1;
 };

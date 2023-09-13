@@ -20,6 +20,8 @@ void Enemy::Initialize()
 	for (int i = 0; i < 9; i++)
 	{
 		stageFlag[i] = false;
+		stageClearFlag[i] = false;
+		stageEnemyNum[i] = 0;
 	}
 }
 
@@ -33,6 +35,8 @@ void Enemy::Update(XMFLOAT3 playerPos)
 
 	//動き
 	TypeUpdate();
+
+	CheckDeadEnemy();
 
 	//オブジェクト更新
 	UpdateObject();
@@ -433,21 +437,48 @@ void Enemy::SetStageNumber(XMFLOAT3 pos)
 {
 	if (pos.x >= -40 && pos.x < 40)
 	{
-		if (pos.z >= -40 && pos.z < 40)stageNember_.emplace_back(1);
-		else if (pos.z >= 40 && pos.z < 120)stageNember_.emplace_back(2);
-		else if (pos.z >= 120 && pos.z < 200)stageNember_.emplace_back(3);
+		if (pos.z >= -40 && pos.z < 40)
+		{
+			stageNember_.emplace_back(1); stageEnemyNum[0]++;
+		}
+		else if (pos.z >= 40 && pos.z < 120)
+		{
+			stageNember_.emplace_back(2); stageEnemyNum[1]++;
+		}
+		else if (pos.z >= 120 && pos.z < 200)
+		{
+			stageNember_.emplace_back(3); stageEnemyNum[2]++;
+		}
 	}
-	else if (pos.x >= 40 && pos.x < 120)
+	else if (pos.x >= -120 && pos.x < -40)
 	{
-		if (pos.z >= -40 && pos.z < 40)stageNember_.emplace_back(4);
-		else if (pos.z >= 40 && pos.z < 120)stageNember_.emplace_back(5);
-		else if (pos.z >= 120 && pos.z < 200)stageNember_.emplace_back(6);
+		if (pos.z >= -40 && pos.z < 40)
+		{
+			stageNember_.emplace_back(4); stageEnemyNum[3]++;
+		}
+		else if (pos.z >= 40 && pos.z < 120)
+		{
+			stageNember_.emplace_back(5); stageEnemyNum[4]++;
+		}
+		else if (pos.z >= 120 && pos.z < 200)
+		{
+			stageNember_.emplace_back(6); stageEnemyNum[5]++;
+		}
 	}
-	else if (pos.x >= 120 && pos.x < 200)
+	else if (pos.x >= -200 && pos.x < -120)
 	{
-		if (pos.z >= -40 && pos.z < 40)stageNember_.emplace_back(7);
-		else if (pos.z >= 40 && pos.z < 120)stageNember_.emplace_back(8);
-		else if (pos.z >= 120 && pos.z < 200)stageNember_.emplace_back(9);
+		if (pos.z >= -40 && pos.z < 40)
+		{
+			stageNember_.emplace_back(7); stageEnemyNum[6]++;
+		}
+		else if (pos.z >= 40 && pos.z < 120)
+		{
+			stageNember_.emplace_back(8); stageEnemyNum[7]++;
+		}
+		else if (pos.z >= 120 && pos.z < 200)
+		{
+			stageNember_.emplace_back(9); stageEnemyNum[8]++;
+		}
 	}
 	else { stageNember_.emplace_back(9); }
 }
@@ -528,7 +559,8 @@ void Enemy::OnCollisionToBullet(int i)
 	hp_[i]--;
 
 	//hpが0以下なら死亡
-	if (hp_[i] <= 0) {
+	if (hp_[i] <= 0 && isDead_[i] == false) {
+		stageEnemyNum[stageNember_[i]] -= 1;
 		isDead_[i] = true;
 	}
 }
@@ -597,12 +629,16 @@ void Enemy::DeleteEnemy()
 
 void Enemy::CheckDeadEnemy()
 {
-	/*for (int i = 0; i < enemyNum; i++)
+	for (int i = 0; i < 9; i++)
 	{
-		if (isDead_[i] == true)
+		if (stageEnemyNum[i] <= 1)
 		{
-			
+			stageClearFlag[i] = true;
 		}
-	}*/
+		/*if (stageNum - 1 != i)
+		{
+			stageClearFlag[i] = false;
+		}*/
+	}
 }
 
