@@ -67,7 +67,8 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	//モデル名を指定してファイル読み込み
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("plane"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("player"));
-	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("enemy"));
+	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("moveEnemy"));
+	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("stopEnemy"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("playerBullet"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("sphere"));
 	models.emplace_back(FbxLoader::GetInstance()->LoadModelFromFile("skydome"));
@@ -396,14 +397,31 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			}
 			if (model->GetFileName() == "player")
 			{
-				if (jsonLoader->GetFileName(i) == "enemy_homingShotEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy"
-					|| jsonLoader->GetFileName(i) == "enemy_normalShotYEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
-					|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy"
-					|| jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy"
-					|| jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy")
+				if (jsonLoader->GetFileName(i) == "player")
 				{
 					newObject->SetModel(model.get());
 				}
+			}
+
+			//敵なら
+
+			if (model->GetFileName() == "moveEnemy")
+			{
+				if (jsonLoader->GetFileName(i) == "enemy_moveXEnemy" || jsonLoader->GetFileName(i) == "enemy_moveZEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy")
+				{
+					newObject->SetModel(model.get());
+				}
+			}
+			if (model->GetFileName() == "stopEnemy")
+			{
+				if (jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
+					|| jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingShotEnemy")
+				{
+					newObject->SetModel(model.get());
+				}
+
 			}
 		}
 
@@ -423,19 +441,14 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 			/*object.pop_back();*/
 		}
 		//敵のオブジェクトがあったら
-		if (jsonLoader->GetFileName(i) == "enemy_homingShotEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy"
-			|| jsonLoader->GetFileName(i) == "enemy_normalShotYEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
-			|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy"
-			|| jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy"
-			|| jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy")
+		if (jsonLoader->GetFileName(i) == "enemy_moveXEnemy" || jsonLoader->GetFileName(i) == "enemy_moveZEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_moveXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingMoveEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_normalShotXEnemy" || jsonLoader->GetFileName(i) == "enemy_normalShotZEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_normalShotXZEnemy" || jsonLoader->GetFileName(i) == "enemy_homingShotEnemy"
+			|| jsonLoader->GetFileName(i) == "enemy_homingMoveShotEnemy")
 		{
 			enemy->SetObject(object.back().get());
 		}
-		//平面のオブジェクトがあったら
-	/*	if (jsonLoader->GetFileName(i) == "plane")
-		{
-			plane->SetObject(object.back().get());
-		}*/
 
 		//コライダーのセット
 		ColliderManager::SetCollider(jsonLoader->GetColliderData(i));
@@ -847,7 +860,7 @@ void GameScene::SceneChange()
 	case SERECT:
 		//左右キーでステージセレクト、スペースで決定
 		if (input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_D)) {
-			if (serectStage < 3) {
+			if (serectStage < 2) {
 				serectStage++;
 			}
 		}
