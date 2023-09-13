@@ -503,9 +503,9 @@ void GameScene::Update()
 	//シーン切り替え
 	SceneChange();
 
-	ImGui::Begin("scene");
-	ImGui::Text("%d", scene);
-	ImGui::End();
+	//ImGui::Begin("scene");
+	//ImGui::Text("%d", scene);
+	//ImGui::End();
 
 	//カメラ更新
 	camera_->UpdatePlayer(player->GetPosition(), player->GetRotation1());
@@ -589,7 +589,7 @@ void GameScene::Update()
 		}
 
 		//コライダー更新
-		UpdateCollider();
+		//UpdateCollider();
 
 		break;
 	}
@@ -994,17 +994,17 @@ void GameScene::SceneChange()
 void GameScene::Draw()
 {
 	//ImGui
-	ImGui::Begin("GameScene");
-	ImGui::SetWindowPos(ImVec2(0, 0));
-	ImGui::SetWindowSize(ImVec2(500, 150));
-	ImGui::InputInt("DrawFbx", drawFbx);
-	ImGui::InputInt("DrawSprite", drawSprite);
-	ImGui::InputInt("DrawCollider", drawCollider);
-	ImGui::InputInt("DrawParticle", drawParticle);
-	ImGui::End();
+	//ImGui::Begin("GameScene");
+	//ImGui::SetWindowPos(ImVec2(0, 0));
+	//ImGui::SetWindowSize(ImVec2(500, 150));
+	//ImGui::InputInt("DrawFbx", drawFbx);
+	//ImGui::InputInt("DrawSprite", drawSprite);
+	//ImGui::InputInt("DrawCollider", drawCollider);
+	//ImGui::InputInt("DrawParticle", drawParticle);
+	//ImGui::End();
 
 	//コライダーの描画
-	if (*drawCollider == 1)DrawCollider();
+	//if (*drawCollider == 1)DrawCollider();
 	//スプライトの描画
 	if (*drawSprite == 1)DrawSprite();
 	//FBXの描画
@@ -1218,7 +1218,9 @@ void GameScene::ChangeStage()
 			&& player->GetPosition().z <= 100 && player->GetPosition().z >= 60)
 		{
 			stageNum = 8;
+			isClear = true;
 		}
+
 	}
 	if (enemy->GetStageClearFlag(8))
 	{
@@ -1229,8 +1231,6 @@ void GameScene::ChangeStage()
 		}
 	}
 }
-
-void GameScene::DeleteEnemy1()
 
 void GameScene::ResetSceneData()
 {

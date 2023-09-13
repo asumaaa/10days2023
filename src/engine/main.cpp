@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//ウィンドウ生成
 	WinApp* winApp = nullptr;
 	winApp = WinApp::GetInstance();
-	winApp->CreateWindow_(L"あいうえお");
+	winApp->CreateWindow_(L"3022_シューティングダンジョン");
 
 	//メッセージ
 	Message* message;
