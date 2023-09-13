@@ -50,6 +50,17 @@ public:
 	void DrawSprite();
 	void DrawParticle();
 
+	//敵のオブジェクト削除
+	void DeleteEnemy1();
+	void DeleteEnemy2();
+	void DeleteEnemy3();
+	void DeleteEnemy4();
+	void DeleteEnemy5();
+	void DeleteEnemy6();
+	void DeleteEnemy7();
+	void DeleteEnemy8();
+	void DeleteEnemy9();
+
 	//セッター
 	void SetSRV(ID3D12DescriptorHeap* SRV);
 	//ゲッター

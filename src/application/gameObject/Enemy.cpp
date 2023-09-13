@@ -341,6 +341,7 @@ void Enemy::SetObject(FbxObject3D* object)
 	position.emplace_back(object->GetPosition());
 	rotation.emplace_back(object->GetRotation());
 	scale.emplace_back(object->GetScale());
+	enemyNum++;
 
 	SetTypeData(HomingMoveShotEnemy);
 }
@@ -411,6 +412,75 @@ void Enemy::SetTypeData(int type)
 
 }
 
+void Enemy::SetStageNumber()
+{
+	/*int i = 0;
+	for (std::unique_ptr<FbxObject3D>& objects : object)
+	{
+		if (objects->GetFileName() == "enemy1_homingShotEnemy" || objects->GetFileName() == "enemy1_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy1_normalShotYEnemy" || objects->GetFileName() == "enemy1_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(1);
+		}
+		if (objects->GetFileName() == "enemy2_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy2_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(2);
+		}
+		if (objects->GetFileName() == "enemy3_homingShotEnemy" || objects->GetFileName() == "enemy3_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy3_normalShotYEnemy" || objects->GetFileName() == "enemy3_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(3);
+		}
+		if (objects->GetFileName() == "enemy4_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy4_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(4);
+		}
+		if (objects->GetFileName() == "enemy5_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy5_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(5);
+		}
+		if (objects->GetFileName() == "enemy6_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy6_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(6);
+		}
+		if (objects->GetFileName() == "enemy7_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy7_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(7);
+		}
+		if (objects->GetFileName() == "enemy8_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy8_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(8);
+		}
+		if (objects->GetFileName() == "enemy9_homingShotEnemy" || objects->GetFileName() == "enemy2_normalShotXEnemy"
+			|| objects->GetFileName() == "enemy9_normalShotYEnemy" || objects->GetFileName() == "enemy2_normalShotZEnemy")
+		{
+			stageNember_.emplace_back(9);
+		}
+		i++;
+	}*/
+}
+
+
+JSONLoader::ColliderData Enemy::GetColliderData(int num)
+{
+	std::list<std::unique_ptr<FbxObject3D>>::iterator itr;
+	itr = object.begin();
+	if (num != 0)
+	{
+		for (int i = 0; i < num; i++)
+		{
+			itr++;
+		}
+	}
+
+	return itr->get()->GetColliderData();
+}
 
 void Enemy::OnCollisionToEnemy(int i, XMFLOAT3 enemyPos)
 {
@@ -532,5 +602,10 @@ void Enemy::RefMoveZ(int i)
 	else {
 		moveZ[i] = 1;
 	}
+}
+
+void Enemy::DeleteEnemy()
+{
+	/*if*/
 }
 

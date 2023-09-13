@@ -367,6 +367,8 @@ void GameScene::Update()
 	//ƒvƒŒƒCƒ„[
 	player->Update();
 
+	/*DeleteEnemy1();*/
+
 	//“G
 	enemy->Update(player->GetPosition());
 
@@ -471,34 +473,58 @@ void GameScene::UpdateCollider()
 	int objectNum = 0;
 
 	//’e‚Æ“G‚Æ‚Ì”»’è
-	for (std::unique_ptr<FbxObject3D>& object0 : object)
-	{
-		if (object0->GetFileName() == "enemy")
-		{
-			//’e‚ªˆê‚ÂˆÈã‚ ‚ê‚Î
-			if (playerBullet->GetBulletNum() >= 1)
-			{
-				for (int i = 0; i < playerBullet->GetBulletNum(); i++)
-				{
-					if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
-						object0->GetColliderData()))
-					{
-						//ƒp[ƒeƒBƒNƒ‹
-						sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-						explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-						explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
-						//’e
-						playerBullet->SetHitFlag(true, i);
+	//for (std::unique_ptr<FbxObject3D>& object0 : object)
+	//{
+	//	if (object0->GetFileName() == "enemy")
+	//	{
+	//		//’e‚ªˆê‚ÂˆÈã‚ ‚ê‚Î
+	//		if (playerBullet->GetBulletNum() >= 1)
+	//		{
+	//			for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+	//			{
+	//				if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
+	//					object0->GetColliderData()))
+	//				{
+	//					//ƒp[ƒeƒBƒNƒ‹
+	//					sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+	//					explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+	//					explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+	//					//’e
+	//					playerBullet->SetHitFlag(true, i);
 
-						//“G“–‚½‚è”»’èˆ—
-						enemy->OnCollisionToBullet(object0->GetEnemyNum());
-					}
-				}
-			}
-		}
+	//					//“G“–‚½‚è”»’èˆ—
+	//					enemy->OnCollisionToBullet(object0->GetEnemyNum());
+	//				}
+	//			}
+	//		}
+	//	}
 
-		objectNum++;
-	}
+	//	objectNum++;
+	//}
+
+	//“G‚Æ’e‚Ì“–‚½‚è”»’è
+	//’e‚ªˆê‚ÂˆÈã‚ ‚ê‚Î
+	//if (playerBullet->GetBulletNum() >= 1)
+	//{
+	//	for (int i = 0; i < playerBullet->GetBulletNum(); i++)
+	//	{
+	//		for (int j = 0; j < enemy->GetEnemyNum(); j++)
+	//		{
+	//			if (ColliderManager::CheckCollider(playerBullet->GetColliderData(i),
+	//				enemy->GetColliderData(j)))
+	//			{
+	//				//ƒp[ƒeƒBƒNƒ‹
+	//				sparkParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+	//				explosionParticle1->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+	//				explosionParticle2->Add(XMFLOAT3(playerBullet->GetPosition(i)));
+	//				//’e
+	//				playerBullet->SetHitFlag(true, i);
+	//				//“G“–‚½‚è”»’èˆ—
+	//				/*enemy->OnCollisionToBullet(object0->GetEnemyNum());*/
+	//			}
+	//		}
+	//	}
+	//}
 
 	//for (int i = 0; i < enemy->GetSize();i++) {
 	//	if (enemy->GetIsDead(i)) {
@@ -605,6 +631,22 @@ void GameScene::DrawParticle()
 	sparkParticle2->Draw(dxCommon_->GetCommandList());
 	explosionParticle1->Draw(dxCommon_->GetCommandList());
 	explosionParticle2->Draw(dxCommon_->GetCommandList());
+}
+
+void GameScene::DeleteEnemy1()
+{
+	int i = 0;
+	for (std::unique_ptr<FbxObject3D>& object0 : object)
+	{
+		if (object0->GetFileName() == "enemy")
+		{
+			if (enemy->GetIsDead(i))
+			{
+				object.erase(std::next(object.begin(), i));
+			}
+		}
+		i++;
+	}
 }
 
 void GameScene::SetSRV(ID3D12DescriptorHeap* SRV)
