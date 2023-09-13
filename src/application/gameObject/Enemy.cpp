@@ -108,7 +108,7 @@ void Enemy::TypeUpdate()
 			if (!isDead_[i]) {
 				switch (type_[i]) {
 
-				//移動系
+					//移動系
 				case MoveXEnemy:
 					MoveX(i);
 					break;
@@ -126,7 +126,7 @@ void Enemy::TypeUpdate()
 					MoveHoming(i);
 					break;
 
-				//射撃系
+					//射撃系
 				case NormalShotXEnemy:
 					ShotX(i);
 					break;
@@ -144,7 +144,7 @@ void Enemy::TypeUpdate()
 					ShotHoming(i);
 					break;
 
-				//複合系
+					//複合系
 				case HomingMoveShotEnemy:
 					MoveHoming(i);
 					ShotHoming(i);
@@ -349,17 +349,18 @@ void Enemy::SetObject(FbxObject3D* object)
 	scale.emplace_back(object->GetScale());
 	enemyNum++;
 
-	if (object->GetFileName() == "enemy_homingShotEnemy")SetTypeData(HomingShotEnemy); 
+	if (object->GetFileName() == "enemy_moveXEnemy")SetTypeData(MoveXEnemy);
+	else if (object->GetFileName() == "enemy_moveZEnemy")SetTypeData(MoveZEnemy);
+	else if (object->GetFileName() == "enemy_moveXZEnemy")SetTypeData(MoveXZEnemy);
+	else if (object->GetFileName() == "enemy_homingMoveEnemy")SetTypeData(HomingMoveEnemy);
+
 	else if (object->GetFileName() == "enemy_normalShotXEnemy")SetTypeData(NormalShotXEnemy);
 	else if (object->GetFileName() == "enemy_normalShotZEnemy")SetTypeData(NormalShotZEnemy);
-	else if (object->GetFileName() == "enemy_moveXZEnemy")SetTypeData(MoveXZEnemy);
-	else if (object->GetFileName() == "enemy_homingMoveShotEnemy")SetTypeData(HomingMoveShotEnemy);
-	else if (object->GetFileName() == "enemy_homingMoveEnemy")SetTypeData(HomingMoveEnemy);
 	else if (object->GetFileName() == "enemy_normalShotXZEnemy")SetTypeData(NormalShotXZEnemy);
-	else if (object->GetFileName() == "enemy_normalShotZEnemy")SetTypeData(NormalShotZEnemy);
-	else { SetTypeData(HomingShotEnemy); }
+	else if (object->GetFileName() == "enemy_homingShotEnemy")SetTypeData(HomingShotEnemy);
+	else  if (object->GetFileName() == "enemy_homingMoveShotEnemy")SetTypeData(HomingMoveShotEnemy);
 
-	SetTypeData(HomingMoveShotEnemy);
+	//SetTypeData(HomingMoveShotEnemy);
 	SetStageNumber(object->GetPosition());
 }
 
@@ -493,7 +494,7 @@ void Enemy::OnCollisionToEnemy(int i, XMFLOAT3 enemyPos)
 
 		//射撃系
 	case NormalShotXEnemy:
-	
+
 		break;
 
 	case NormalShotZEnemy:
@@ -505,21 +506,21 @@ void Enemy::OnCollisionToEnemy(int i, XMFLOAT3 enemyPos)
 		break;
 
 	case HomingShotEnemy:
-	
+
 		break;
 
 		//複合系,特殊系
 	case HomingMoveShotEnemy:
-		RefVec(i,enemyPos);
+		RefVec(i, enemyPos);
 		break;
 	}
 
 }
 
-void Enemy::OnCollisionToPlayer(int i,XMFLOAT3 playerPos)
+void Enemy::OnCollisionToPlayer(int i, XMFLOAT3 playerPos)
 {
 	//敵同士と同じ挙動
-	OnCollisionToEnemy(i,playerPos);
+	OnCollisionToEnemy(i, playerPos);
 }
 
 void Enemy::OnCollisionToBullet(int i)
@@ -601,7 +602,7 @@ void Enemy::CheckDeadEnemy()
 	{
 		if (isDead_[i] == true)
 		{
-			
+
 		}
 	}*/
 }
