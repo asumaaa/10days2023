@@ -122,7 +122,6 @@ void Player::KeyControl()
 			isAdd = true;
 		}
 	}
-	isAdd = true;
 
 	if (isAdd) {
 		position.x += posVelocity.x;
@@ -152,7 +151,6 @@ void Player::KeyControl()
 			isAdd = true;
 		}
 	}
-	isAdd = true;
 
 	if (isAdd) {
 		position.z += posVelocity.z;
