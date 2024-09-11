@@ -534,6 +534,7 @@ void GameScene::Update()
 	/*DeleteEnemy1();*/
 
 	enemy->SetStageNum(stageNum);
+
 	enemy->Update(player->GetPosition());
 		/*particleObject->SetPosition(XMFLOAT3(10.0f,5.0f,0));*/
 		//パーティクル
@@ -1021,9 +1022,28 @@ void GameScene::DrawFBXLightView()
 	player->DrawLightView(dxCommon_->GetCommandList());
 
 	skydome->DrawLightView(dxCommon_->GetCommandList());
+
+	int i = 0;
+
 	for (std::unique_ptr<FbxObject3D>& object0 : object)
 	{
-		object0->DrawLightView(dxCommon_->GetCommandList());
+		if (object0->GetFileName() == "enemy_homingShotEnemy" || object0->GetFileName() == "enemy_normalShotXEnemy"
+			|| object0->GetFileName() == "enemy_normalShotYEnemy" || object0->GetFileName() == "enemy_normalShotZEnemy"
+			|| object0->GetFileName() == "enemy_moveXZEnemy" || object0->GetFileName() == "enemy_homingMoveShotEnemy"
+			|| object0->GetFileName() == "enemy_homingMoveEnemy" || object0->GetFileName() == "enemy_normalShotXZEnemy"
+			|| object0->GetFileName() == "enemy_normalShotZEnemy")
+		{
+			//���݂̃X�e�[�W�ƈ�v������
+			if (!enemy->GetIsDead(i))
+			{
+				object0->DrawLightView(dxCommon_->GetCommandList());
+			}
+			i++;
+		}
+		else
+		{
+			object0->DrawLightView(dxCommon_->GetCommandList());
+		}
 	}
 }
 
@@ -1042,54 +1062,20 @@ void GameScene::DrawFBX()
 			|| object0->GetFileName() == "enemy_normalShotZEnemy")
 		{
 			//���݂̃X�e�[�W�ƈ�v������
-			if (enemy->GetEnemyStageNum(i) == stageNum)
+			if (!enemy->GetIsDead(i))
 			{
 				object0->Draw(dxCommon_->GetCommandList());
 			}
 			i++;
 		}
-		else if (object0->GetFileName() == "stage1")
-		{
-			if (stageNum == 1 || enemy->GetStageClearFlag(1))object0->Draw(dxCommon_->GetCommandList());
-		}
-		else if (object0->GetFileName() == "stage2")
-		{
-			if (stageNum == 2 || enemy->GetStageClearFlag(1))object0->Draw(dxCommon_->GetCommandList());
-		}
-		else if (object0->GetFileName() == "stage3")
-		{
-			if (stageNum == 3 || enemy->GetStageClearFlag(2))object0->Draw(dxCommon_->GetCommandList());
-		}
-		else if (object0->GetFileName() == "stage4")
-		{
-			if (stageNum == 4 || enemy->GetStageClearFlag(1))object0->Draw(dxCommon_->GetCommandList());
-		}
-		else if (object0->GetFileName() == "stage5")
-		{
-			if (stageNum == 5 || enemy->GetStageClearFlag(2) || enemy->GetStageClearFlag(4))object0->Draw(dxCommon_->GetCommandList());
-		}
-		else if (object0->GetFileName() == "stage6")
-		{
-			if (stageNum == 6 || enemy->GetStageClearFlag(3) || enemy->GetStageClearFlag(5))object0->Draw(dxCommon_->GetCommandList());
-		}
-		else if (object0->GetFileName() == "stage7")
-		{
-			if (stageNum == 7 || enemy->GetStageClearFlag(4))object0->Draw(dxCommon_->GetCommandList());
-		}
-		else if (object0->GetFileName() == "stage8")
-		{
-			if (stageNum == 8 || enemy->GetStageClearFlag(5) || enemy->GetStageClearFlag(7))object0->Draw(dxCommon_->GetCommandList());
-		}
-		else if (object0->GetFileName() == "stage9")
-		{
-			if (stageNum == 9 || enemy->GetStageClearFlag(6) || enemy->GetStageClearFlag(8))object0->Draw(dxCommon_->GetCommandList());
-		}
-		else
+		else 
 		{
 			object0->Draw(dxCommon_->GetCommandList());
 		}
 	}
+
 	enemy->Draw(dxCommon_->GetCommandList());
+
 	player->Draw(dxCommon_->GetCommandList());
 
 }
@@ -1210,6 +1196,8 @@ void GameScene::ChangeStage()
 			&& player->GetPosition().z <= 180 && player->GetPosition().z >= 140)
 		{
 			stageNum = 9;
+			isClear = true;
+
 		}
 	}
 	if (enemy->GetStageClearFlag(7))
@@ -1218,7 +1206,6 @@ void GameScene::ChangeStage()
 			&& player->GetPosition().z <= 100 && player->GetPosition().z >= 60)
 		{
 			stageNum = 8;
-			isClear = true;
 		}
 
 	}

@@ -53,7 +53,7 @@ void Player::UpdateObject()
 
 void Player::UpdateBullet()
 {
-	if (input->TriggerKey(DIK_RETURN))
+	if (input->TriggerKey(DIK_RETURN) || input->TriggerKey(DIK_SPACE))
 	{
 		shotSE->StopWave();
 		shotSE->SoundPlayWave(false, shotSEVolume);
